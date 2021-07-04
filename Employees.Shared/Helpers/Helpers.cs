@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Employees.Shared.Models;
 
 namespace Employees.Shared.Helpers
 {
@@ -17,8 +20,8 @@ namespace Employees.Shared.Helpers
         public static string GetCheckedRadioButtonOnGroupBox(GroupBox groupBox)
         {
             RadioButton statusGroupCheckedRadioButton = groupBox.Controls.OfType<RadioButton>()
-                                                                .First(r => r.Checked);
-            return statusGroupCheckedRadioButton.Text;
+                                                                .FirstOrDefault(r => r.Checked);
+            return statusGroupCheckedRadioButton != null ? statusGroupCheckedRadioButton.Text : string.Empty;
         }
 
         /// <summary>
@@ -56,6 +59,71 @@ namespace Employees.Shared.Helpers
             }
 
             return isValid;
+        }
+
+
+        /// <summary>
+        /// Used to retrieve all controls. Usually used for gathering all radio buttons.
+        /// </summary>
+        /// <param name="control">Control on which searching for controls will happen.</param>
+        /// <param name="type">Type of control to get. Usage: typeof(RadioButton)</param>
+        /// <returns>List of all controls of selected type in control. Example: List of RadioButtons</returns>
+        public static IEnumerable<Control> GetAllControls(Control control, Type type)
+        {
+            IEnumerable<Control> controls = control.Controls.Cast<Control>();
+            return controls.SelectMany(ctrls => GetAllControls(ctrls, type)).Concat(controls).Where(c => c.GetType() == type);
+        }
+
+        /// <summary>
+        /// Used to prepare buttons for data grid view cells.
+        /// </summary>
+        /// <param name="text">Name / text of button.</param>
+        /// <returns>Prepared button column.</returns>
+        public static DataGridViewColumn PrepareButtonInCell(string text)
+        {
+            return new DataGridViewButtonColumn
+            {
+                HeaderText = text,
+                Text = text,
+                Name = text,
+                UseColumnTextForButtonValue = true,
+            };
+        }
+
+        /// <summary>
+        /// Converts employee to object array.
+        /// </summary>
+        /// <param name="employee">Employee to convert.</param>
+        /// <returns>Object array.</returns>
+        public static object[] ConvertEmplyoeeToDataGridRow(Employee employee)
+        {
+            return new object[]
+            {
+                employee.Id.ToString(),
+                employee.Name,
+                employee.Email,
+                employee.Gender,
+                employee.Status,
+                employee.Created.ToLongTimeString(),
+                employee.Updated.ToLongTimeString(),
+            };
+        }
+
+        /// <summary>
+        /// Remove checked all radio buttons on tab page.
+        /// </summary>
+        /// <param name="tabPageToUncheck">Tab page.</param>
+        public static void UncheckAllRadioButtonsOnTabPage(TabPage tabPageToUncheck)
+        {
+            IEnumerable<Control> controls = Helpers.GetAllControls(tabPageToUncheck, typeof(RadioButton));
+            foreach (Control control in controls)
+            {
+                var radioButton = (RadioButton)control;
+                if (radioButton.Checked)
+                {
+                    radioButton.Checked = false;
+                }
+            }
         }
     }
 }

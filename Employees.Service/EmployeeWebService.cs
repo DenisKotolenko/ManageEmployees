@@ -27,10 +27,16 @@ namespace Employees.Service
         {
         }
 
+        /// <summary>
+        /// Private constructor for Singleton.
+        /// </summary>
         private EmployeeWebService()
         {
         }
 
+        /// <summary>
+        /// WebService Singleton instance.
+        /// </summary>
         public static EmployeeWebService WebServiceSingleton { get; } = new EmployeeWebService();
 
         /// <summary>
@@ -39,7 +45,7 @@ namespace Employees.Service
         /// <returns></returns>
         public async Task<HttpStatusCode> CheckIfHostIsOnlineAsync()
         {
-            using (HttpResponseMessage response = await ApiClientHelper.RestApiClient.GetAsync(Constants.BaseHostAdress))
+            using (HttpResponseMessage response = await ApiClient.RestApiClient.GetAsync(Constants.BaseHostAdress))
             {
                 var webApiResult = await response.Content.ReadAsAsync<HostDataList>();
                 CheckWebApiResultForErrorsAsync(webApiResult.Code, _noConnectionErrorMessage);
@@ -55,12 +61,12 @@ namespace Employees.Service
         /// <returns>Filled up EmployeeModel. Otherwise throws error.</returns>
         public async Task<Employee> GetEmployeeByIdFromWebApiAsync(int employeeId)
         {
-            string getByIdUrl = $"{Constants.BaseHostAdress}{employeeId}";
+            string getByIdUrl = $"{Constants.BaseHostAdress}/{employeeId}";
 
-            using (HttpResponseMessage response = await ApiClientHelper.RestApiClient.GetAsync(getByIdUrl))
+            using (HttpResponseMessage response = await ApiClient.RestApiClient.GetAsync(getByIdUrl))
             {
                 var webApiResult = await response.Content.ReadAsAsync<HostData>();
-                CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data.ErrorMessage);
+                CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
 
                 return webApiResult.Data;
             }
@@ -76,10 +82,10 @@ namespace Employees.Service
             string json = JsonConvert.SerializeObject(employee);
             var stringContent = new StringContent(json, Encoding.UTF8, Constants.ResponseFormat);
 
-            using (HttpResponseMessage response = await ApiClientHelper.RestApiClient.PostAsync(Constants.BaseHostAdress, stringContent))
+            using (HttpResponseMessage response = await ApiClient.RestApiClient.PostAsync(Constants.BaseHostAdress, stringContent))
             {
                 var webApiResult = await response.Content.ReadAsAsync<HostData>();
-                CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data.ErrorMessage);
+                CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
 
                 return webApiResult.Data;
             }
@@ -94,12 +100,12 @@ namespace Employees.Service
         public async Task<Employee> UpdateEmployeeToWebApiAsync(Employee employee, int id)
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(employee), Encoding.UTF8, Constants.ResponseFormat);
-            string putUrl = $"{Constants.BaseHostAdress}{id}";
+            string putUrl = $"{Constants.BaseHostAdress}/{id}";
 
-            using (HttpResponseMessage response = await ApiClientHelper.RestApiClient.PutAsync(putUrl, stringContent))
+            using (HttpResponseMessage response = await ApiClient.RestApiClient.PutAsync(putUrl, stringContent))
             {
                 var webApiResult = await response.Content.ReadAsAsync<HostData>();
-                CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data.ErrorMessage);
+                CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
 
                 return webApiResult.Data;
             }
@@ -112,12 +118,12 @@ namespace Employees.Service
         /// <returns>No body/content if successful. Otherwise throws error.</returns>
         public async Task DeleteEmployeeFromWebApiAsync(int id)
         {
-            string deleteUrl = $"{Constants.BaseHostAdress}{id}";
+            string deleteUrl = $"{Constants.BaseHostAdress}/{id}";
 
-            using (HttpResponseMessage response = await ApiClientHelper.RestApiClient.DeleteAsync(deleteUrl))
+            using (HttpResponseMessage response = await ApiClient.RestApiClient.DeleteAsync(deleteUrl))
             {
                 var webApiResult = await response.Content.ReadAsAsync<HostData>();
-                CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data.ErrorMessage);
+                CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
             }
         }
         
@@ -126,38 +132,20 @@ namespace Employees.Service
         /// </summary>
         /// <param name="criteria">Dictionary for HTTP field criteria.</param>
         /// <returns>List of selected employees.</returns>
-        public async Task<List<Employee>> ViewEmployeesByCriteriaFromWebApiAsync(Dictionary<string, string> criteria)
+        public async Task<HostDataList> ViewEmployeesByCriteriaFromWebApiAsync(Dictionary<string, string> criteria)
         {
             string getByCriteriaUrl = $"{Constants.BaseHostAdress}{questionMarkHttpDelimeter}{CriteriaUrlStringCreator(criteria)}";
 
-            using (HttpResponseMessage response = await ApiClientHelper.RestApiClient.GetAsync(getByCriteriaUrl))
+            using (HttpResponseMessage response = await ApiClient.RestApiClient.GetAsync(getByCriteriaUrl))
             {
                 var employeeModelList = await response.Content.ReadAsAsync<HostDataList>();
                 CheckWebApiResultForErrorsAsync(employeeModelList.Code, errorMessage);
 
-                return employeeModelList.EmployeeDataList;
-            }
-        }
-
-        /// <summary>
-        /// GET: Retrieve one page of employees from web api.
-        /// </summary>
-        /// <param name="page">Page number.</param>
-        /// <returns>List of employees.</returns>
-        public async Task<List<Employee>> ViewEmployeesByPageFromWebApiAsync(int page)
-        {
-            string pagingUrl = $"{Constants.BaseHostAdress}{questionMarkHttpDelimeter}page={page}";
-            
-            using (HttpResponseMessage response = await ApiClientHelper.RestApiClient.GetAsync(pagingUrl))
-            {
-                var employeeModelList = await response.Content.ReadAsAsync<HostDataList>();
-                CheckWebApiResultForErrorsAsync(employeeModelList.Code, errorMessage);
-
-                return employeeModelList.EmployeeDataList;
+                return employeeModelList;
             }
         }
         
-        private void CheckWebApiResultForErrorsAsync(HttpStatusCode httpStatusCode, string errorMessage )
+        private void CheckWebApiResultForErrorsAsync(HttpStatusCode httpStatusCode, string errorMessage)
         {
             if (!Enum.IsDefined(typeof(ValidHttpStatusCodeEnum), (int)httpStatusCode))
             {
@@ -170,7 +158,9 @@ namespace Employees.Service
             var stringBuilder = new StringBuilder();
             foreach (KeyValuePair<string, string> keyValuePair in criteriaDictionary)
             {
-                stringBuilder.Append(stringBuilder.Length > 0 ? $"{andHttpDelimeter}{keyValuePair.Key}{equalHttpDelimeter}{keyValuePair.Value}" : $"{keyValuePair.Key}{equalHttpDelimeter}{keyValuePair.Value}");
+                string key = keyValuePair.Key.ToLower();
+                string value = keyValuePair.Value;
+                stringBuilder.Append(stringBuilder.Length > 0 ? $"{andHttpDelimeter}{key}{equalHttpDelimeter}{value}" : $"{key}{equalHttpDelimeter}{value}");
             }
             return stringBuilder.ToString();
         }

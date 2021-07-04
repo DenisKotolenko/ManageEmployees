@@ -15,6 +15,12 @@ namespace Employees.Shared.Models
         public HttpStatusCode Code { get; set; }
 
         /// <summary>
+        /// Meta data from web api.
+        /// </summary>
+        [JsonProperty("meta")]
+        public MetaData MetaData { get; set; }
+
+        /// <summary>
         /// Employee data from web api.
         /// </summary>
         [JsonProperty("data")]

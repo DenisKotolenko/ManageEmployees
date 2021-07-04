@@ -11,10 +11,10 @@ E:\ups\Employees\bin\Debug\Employees.Shared.pdb
 E:\ups\Employees\bin\Debug\System.Net.Http.Formatting.xml
 E:\ups\Employees\bin\Debug\Newtonsoft.Json.xml
 E:\ups\Employees\obj\Debug\Employees.csprojAssemblyReference.cache
-E:\ups\Employees\obj\Debug\Employees.Forms.MainForm.resources
+E:\ups\Employees\obj\Debug\Employees.Forms.EditEmployeeForm.resources
 E:\ups\Employees\obj\Debug\Employees.Properties.Resources.resources
 E:\ups\Employees\obj\Debug\Employees.csproj.GenerateResource.cache
 E:\ups\Employees\obj\Debug\Employees.csproj.CopyComplete
 E:\ups\Employees\obj\Debug\Employees.exe
 E:\ups\Employees\obj\Debug\Employees.pdb
-E:\ups\Employees\obj\Debug\Employees.Forms.PopupForm.resources
+E:\ups\Employees\obj\Debug\Employees.Forms.MainForm.resources
