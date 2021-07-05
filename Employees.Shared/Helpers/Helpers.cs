@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Employees.Shared.Models;
@@ -10,8 +12,44 @@ namespace Employees.Shared.Helpers
     /// <summary>
     /// Helper class for various purposes.
     /// </summary>
+    [ExcludeFromCodeCoverage] //static classes are not testable. However this could be done with wrapper.
     public static class Helpers
     {
+        /// <summary>
+        /// Creates criteria string from dictionary.
+        /// </summary>
+        /// <param name="criteriaDictionary">Dictionary  with criteria.</param>
+        /// <returns>Formated string with criteria for web api to use.</returns>
+        public static string CriteriaUrlStringCreator(IDictionary<string, string> criteriaDictionary)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (KeyValuePair<string, string> keyValuePair in criteriaDictionary)
+            {
+                string key = keyValuePair.Key.ToLower();
+                string value = keyValuePair.Value;
+                stringBuilder.Append(stringBuilder.Length > 0 ? $"{Constants.Constants.AndHttpDelimeter}{key}{Constants.Constants.EqualHttpDelimeter}{value}" : $"{key}{Constants.Constants.EqualHttpDelimeter}{value}");
+            }
+            return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Used for setting checked attribute on radio button on control.
+        /// </summary>
+        /// <param name="control">Control for scanner.</param>
+        /// <param name="radioButtonText">RadioButton text</param>
+        public static void CheckCorrectRadioButton(Control control, string radioButtonText)
+        {
+            IEnumerable<Control> controls = GetAllControls(control, typeof(RadioButton));
+            foreach (Control ct in controls)
+            {
+                var radioButton = (RadioButton) ct;
+                if (radioButton.Text == radioButtonText)
+                {
+                    radioButton.Checked = true;
+                }
+            }
+        }
+
         /// <summary>
         /// Finds checked radio button on group box.
         /// </summary>
@@ -61,7 +99,6 @@ namespace Employees.Shared.Helpers
             return isValid;
         }
 
-
         /// <summary>
         /// Used to retrieve all controls. Usually used for gathering all radio buttons.
         /// </summary>
@@ -95,7 +132,7 @@ namespace Employees.Shared.Helpers
         /// </summary>
         /// <param name="employee">Employee to convert.</param>
         /// <returns>Object array.</returns>
-        public static object[] ConvertEmplyoeeToDataGridRow(Employee employee)
+        public static object[] ConvertEmplyoeeToDataGridRow(IEmployee employee)
         {
             return new object[]
             {
@@ -115,10 +152,10 @@ namespace Employees.Shared.Helpers
         /// <param name="tabPageToUncheck">Tab page.</param>
         public static void UncheckAllRadioButtonsOnTabPage(TabPage tabPageToUncheck)
         {
-            IEnumerable<Control> controls = Helpers.GetAllControls(tabPageToUncheck, typeof(RadioButton));
+            IEnumerable<Control> controls = GetAllControls(tabPageToUncheck, typeof(RadioButton));
             foreach (Control control in controls)
             {
-                var radioButton = (RadioButton)control;
+                var radioButton = (RadioButton) control;
                 if (radioButton.Checked)
                 {
                     radioButton.Checked = false;

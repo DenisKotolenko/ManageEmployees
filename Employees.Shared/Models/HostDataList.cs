@@ -7,25 +7,18 @@ namespace Employees.Shared.Models
     /// <summary>
     /// Class for receiving JSON data from web api.
     /// </summary>
-    public class HostDataList
+    public class HostDataList : IHostDataList
     {
-        /// <summary>
-        /// HTTP status code from web api.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("code")]
         public HttpStatusCode Code { get; set; }
 
-        /// <summary>
-        /// Meta data from web api.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("meta")]
         public MetaData MetaData { get; set; }
 
-        /// <summary>
-        /// List of employees from web api.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("data")]
         public List<Employee> EmployeeDataList { get; set; }
     }
 }
-

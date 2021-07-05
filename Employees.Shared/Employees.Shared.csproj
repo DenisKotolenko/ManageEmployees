@@ -53,9 +53,13 @@
     <Compile Include="Constants\ValidHttpStatusCodeEnum.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\Helpers.cs" />
+    <Compile Include="Models\Criteria.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\HostData.cs" />
     <Compile Include="Models\HostDataList.cs" />
+    <Compile Include="Models\ICriteria.cs" />
+    <Compile Include="Models\IEmployee.cs" />
+    <Compile Include="Models\IHostDataList.cs" />
     <Compile Include="Models\PaginationMetaData.cs" />
     <Compile Include="Models\MetaData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

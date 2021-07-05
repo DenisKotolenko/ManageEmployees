@@ -1,4 +1,6 @@
-﻿namespace Employees.Forms
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Employees.Forms
 {
     partial class EditEmployeeForm
     {
@@ -11,6 +13,7 @@
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        [ExcludeFromCodeCoverage] //NOTE: auto generated code should not be tested
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -26,6 +29,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
+        [ExcludeFromCodeCoverage] //NOTE: auto generated code should not be tested
         private void InitializeComponent()
         {
             this.genderGroupBox = new System.Windows.Forms.GroupBox();
@@ -78,9 +82,9 @@
             // 
             // UpdateEmployeeButton
             // 
-            this.UpdateEmployeeButton.Location = new System.Drawing.Point(129, 263);
+            this.UpdateEmployeeButton.Location = new System.Drawing.Point(129, 264);
             this.UpdateEmployeeButton.Name = "UpdateEmployeeButton";
-            this.UpdateEmployeeButton.Size = new System.Drawing.Size(148, 48);
+            this.UpdateEmployeeButton.Size = new System.Drawing.Size(150, 48);
             this.UpdateEmployeeButton.TabIndex = 27;
             this.UpdateEmployeeButton.Text = "Save";
             this.UpdateEmployeeButton.UseVisualStyleBackColor = true;

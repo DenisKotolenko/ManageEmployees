@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formatters\ITextFormatter.cs" />
+    <Compile Include="Formatters\TextFormatter.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -60,6 +62,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\EmployeeFormsProvider.cs" />
+    <Compile Include="Providers\IEmployeeFormsProvider.cs" />
+    <Compile Include="Providers\IPageProvider.cs" />
+    <Compile Include="Providers\PageProvider.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

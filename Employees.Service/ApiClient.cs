@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Employees.Shared.Constants;
@@ -8,6 +9,7 @@ namespace Employees.Service
     /// <summary>
     /// Class for web api client.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ApiClient
     {
         /// <summary>

@@ -2,6 +2,9 @@
 
 namespace Employees.Shared.Models
 {
+    /// <summary>
+    /// Class for pagination meta data.
+    /// </summary>
     public class MetaData
     {
         /// <summary>

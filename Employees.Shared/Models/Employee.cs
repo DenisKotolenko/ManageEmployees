@@ -7,59 +7,41 @@ namespace Employees.Shared.Models
     /// Employee class for employee object JSON serialization / deserialization.
     /// NOTE: This class is used for whole solution as main Employee class.
     /// </summary>
-    public class Employee
+    public class Employee : IEmployee
     {
-        /// <summary>
-        /// Id of employee.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("id")]
         public int Id { get; set; }
 
-        /// <summary>
-        /// Name of employee.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Email of employee.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("email")]
         public string Email { get; set; }
 
-        /// <summary>
-        /// Gender of employee.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("gender")]
         public string Gender { get; set; }
 
-        /// <summary>
-        /// Employment status of employee.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("status")]
         public string Status { get; set; }
 
-        /// <summary>
-        /// Employee creation date and time.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("created_at")]
         public DateTime Created { get; set; }
 
-        /// <summary>
-        /// Employee update date and time.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("updated_at")]
         public DateTime Updated { get; set; }
 
-        /// <summary>
-        /// Error message.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("message")]
         public string ErrorMessage { get; set; }
 
-        /// <summary>
-        /// Field with error.
-        /// </summary>
+        ///<inheritdoc/>
         [JsonProperty("field")]
         public string ErrorField { get; set; }
     }

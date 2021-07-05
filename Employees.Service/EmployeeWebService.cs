@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Employees.Shared.Constants;
+using Employees.Shared.Helpers;
 using Employees.Shared.Models;
 using Newtonsoft.Json;
 
@@ -13,55 +14,14 @@ namespace Employees.Service
     /// <summary>
     /// Web service used for communication with web api.
     /// </summary>
-    public class EmployeeWebService
+    public class EmployeeWebService : IEmployeeWebService
     {
-        private readonly string _noConnectionErrorMessage = $"No connection to: {Constants.BaseHostAdress}";
-        private readonly string questionMarkHttpDelimeter = "?";
-        private readonly string andHttpDelimeter = "&";
-        private readonly string equalHttpDelimeter = "=";
-        private readonly string errorMessage = "Error";
+        private const string ErrorMessage = "Error";
 
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as before field initialization
-        static EmployeeWebService()
+        ///<inheritdoc/>
+        public async Task<IEmployee> GetEmployeeByIdFromWebApiAsync(int employeeId)
         {
-        }
-
-        /// <summary>
-        /// Private constructor for Singleton.
-        /// </summary>
-        private EmployeeWebService()
-        {
-        }
-
-        /// <summary>
-        /// WebService Singleton instance.
-        /// </summary>
-        public static EmployeeWebService WebServiceSingleton { get; } = new EmployeeWebService();
-
-        /// <summary>
-        /// Do a GET call to check if host is on line. If host service does not return HttpStatusCode 200 on general GET request it has error or is off-line.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<HttpStatusCode> CheckIfHostIsOnlineAsync()
-        {
-            using (HttpResponseMessage response = await ApiClient.RestApiClient.GetAsync(Constants.BaseHostAdress))
-            {
-                var webApiResult = await response.Content.ReadAsAsync<HostDataList>();
-                CheckWebApiResultForErrorsAsync(webApiResult.Code, _noConnectionErrorMessage);
-
-                return webApiResult.Code;
-            }
-        }
-
-        /// <summary>
-        /// GET: Retrieves employee from web service by id.
-        /// </summary>
-        /// <param name="employeeId">Id of employee to retrieve.</param>
-        /// <returns>Filled up EmployeeModel. Otherwise throws error.</returns>
-        public async Task<Employee> GetEmployeeByIdFromWebApiAsync(int employeeId)
-        {
-            string getByIdUrl = $"{Constants.BaseHostAdress}/{employeeId}";
+            var getByIdUrl = $"{Constants.BaseHostAdress}{Constants.SlashHttpDelimeter}{employeeId}";
 
             using (HttpResponseMessage response = await ApiClient.RestApiClient.GetAsync(getByIdUrl))
             {
@@ -72,13 +32,14 @@ namespace Employees.Service
             }
         }
 
-        /// <summary>
-        /// POST: Adds employee to web api.
-        /// </summary>
-        /// <param name="employee">Employee to be added.</param>
-        /// <returns>Newly created Employee. Otherwise throws error.</returns>
-        public async Task<Employee> AddEmployeeToWebApiAsync(Employee employee)
+        ///<inheritdoc/>
+        public async Task<IEmployee> AddEmployeeToWebApiAsync(IEmployee employee)
         {
+            if (employee == null)
+            {
+                throw new ArgumentNullException(nameof(employee));
+            }
+
             string json = JsonConvert.SerializeObject(employee);
             var stringContent = new StringContent(json, Encoding.UTF8, Constants.ResponseFormat);
 
@@ -91,16 +52,16 @@ namespace Employees.Service
             }
         }
 
-        /// <summary>
-        /// PUT: Updates selected employee by id.
-        /// </summary>
-        /// <param name="employee">Employee for update.</param>
-        /// <param name="id">Id of employee to be updated.</param>
-        /// <returns>Updated Employee. Otherwise throws error.</returns>
-        public async Task<Employee> UpdateEmployeeToWebApiAsync(Employee employee, int id)
+        ///<inheritdoc/>
+        public async Task<IEmployee> UpdateEmployeeToWebApiAsync(IEmployee employee, int id)
         {
+            if (employee == null)
+            {
+                throw new ArgumentNullException(nameof(employee));
+            }
+
             var stringContent = new StringContent(JsonConvert.SerializeObject(employee), Encoding.UTF8, Constants.ResponseFormat);
-            string putUrl = $"{Constants.BaseHostAdress}/{id}";
+            var putUrl = $"{Constants.BaseHostAdress}{Constants.SlashHttpDelimeter}{id}";
 
             using (HttpResponseMessage response = await ApiClient.RestApiClient.PutAsync(putUrl, stringContent))
             {
@@ -111,14 +72,10 @@ namespace Employees.Service
             }
         }
 
-        /// <summary>
-        /// DELETE: Deletes employee on web api based on employee id.
-        /// </summary>
-        /// <param name="id">Id of employee to be deleted.</param>
-        /// <returns>No body/content if successful. Otherwise throws error.</returns>
+        ///<inheritdoc/>
         public async Task DeleteEmployeeFromWebApiAsync(int id)
         {
-            string deleteUrl = $"{Constants.BaseHostAdress}/{id}";
+            var deleteUrl = $"{Constants.BaseHostAdress}{Constants.SlashHttpDelimeter}{id}";
 
             using (HttpResponseMessage response = await ApiClient.RestApiClient.DeleteAsync(deleteUrl))
             {
@@ -126,43 +83,27 @@ namespace Employees.Service
                 CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
             }
         }
-        
-        /// <summary>
-        /// GET: Retrieve list of employees per criteria.
-        /// </summary>
-        /// <param name="criteria">Dictionary for HTTP field criteria.</param>
-        /// <returns>List of selected employees.</returns>
-        public async Task<HostDataList> ViewEmployeesByCriteriaFromWebApiAsync(Dictionary<string, string> criteria)
+
+        ///<inheritdoc/>
+        public async Task<IHostDataList> ViewEmployeesByCriteriaFromWebApiAsync(Dictionary<string, string> criteria)
         {
-            string getByCriteriaUrl = $"{Constants.BaseHostAdress}{questionMarkHttpDelimeter}{CriteriaUrlStringCreator(criteria)}";
+            var getByCriteriaUrl = $"{Constants.BaseHostAdress}{Constants.QuestionMarkHttpDelimeter}{Helpers.CriteriaUrlStringCreator(criteria)}";
 
             using (HttpResponseMessage response = await ApiClient.RestApiClient.GetAsync(getByCriteriaUrl))
             {
                 var employeeModelList = await response.Content.ReadAsAsync<HostDataList>();
-                CheckWebApiResultForErrorsAsync(employeeModelList.Code, errorMessage);
+                CheckWebApiResultForErrorsAsync(employeeModelList.Code, ErrorMessage);
 
                 return employeeModelList;
             }
         }
-        
-        private void CheckWebApiResultForErrorsAsync(HttpStatusCode httpStatusCode, string errorMessage)
-        {
-            if (!Enum.IsDefined(typeof(ValidHttpStatusCodeEnum), (int)httpStatusCode))
-            {
-                throw new Exception($"ErrorCode: {httpStatusCode} ErrorMessage: {errorMessage}");
-            }
-        }
 
-        private string CriteriaUrlStringCreator(Dictionary<string, string> criteriaDictionary)
+        private void CheckWebApiResultForErrorsAsync(HttpStatusCode httpStatusCode, string errorMsg)
         {
-            var stringBuilder = new StringBuilder();
-            foreach (KeyValuePair<string, string> keyValuePair in criteriaDictionary)
+            if (!Enum.IsDefined(typeof(ValidHttpStatusCodeEnum), (int) httpStatusCode))
             {
-                string key = keyValuePair.Key.ToLower();
-                string value = keyValuePair.Value;
-                stringBuilder.Append(stringBuilder.Length > 0 ? $"{andHttpDelimeter}{key}{equalHttpDelimeter}{value}" : $"{key}{equalHttpDelimeter}{value}");
+                throw new Exception($"ErrorCode: {httpStatusCode} ErrorMessage: {errorMsg}");
             }
-            return stringBuilder.ToString();
         }
     }
 }

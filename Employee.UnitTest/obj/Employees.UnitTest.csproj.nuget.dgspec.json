@@ -1,0 +1,161 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\ups\\Employee.UnitTest\\Employees.UnitTest.csproj": {}
+  },
+  "projects": {
+    "E:\\ups\\Employee.UnitTest\\Employees.UnitTest.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\ups\\Employee.UnitTest\\Employees.UnitTest.csproj",
+        "projectName": "Employees.UnitTest",
+        "projectPath": "E:\\ups\\Employee.UnitTest\\Employees.UnitTest.csproj",
+        "packagesPath": "C:\\Users\\denisk\\.nuget\\packages\\",
+        "outputPath": "E:\\ups\\Employee.UnitTest\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\denisk\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "E:\\ups\\Employees\\Employees.csproj": {
+                "projectPath": "E:\\ups\\Employees\\Employees.csproj"
+              },
+              "E:\\ups\\TestHelpers\\TestHelpers.csproj": {
+                "projectPath": "E:\\ups\\TestHelpers\\TestHelpers.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.10.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.16.1, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[3.12.0, )"
+            },
+            "NUnit3TestAdapter": {
+              "target": "Package",
+              "version": "[3.16.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.116\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\ups\\Employees.Service\\Employees.Service.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\ups\\Employees.Service\\Employees.Service.csproj",
+        "projectName": "Employees.Service",
+        "projectPath": "E:\\ups\\Employees.Service\\Employees.Service.csproj",
+        "frameworks": {
+          "net472": {
+            "projectReferences": {
+              "E:\\ups\\Employees.Shared\\Employees.Shared.csproj": {
+                "projectPath": "E:\\ups\\Employees.Shared\\Employees.Shared.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    },
+    "E:\\ups\\Employees.Shared\\Employees.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\ups\\Employees.Shared\\Employees.Shared.csproj",
+        "projectName": "Employees.Shared",
+        "projectPath": "E:\\ups\\Employees.Shared\\Employees.Shared.csproj"
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    },
+    "E:\\ups\\Employees\\Employees.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\ups\\Employees\\Employees.csproj",
+        "projectName": "Employees",
+        "projectPath": "E:\\ups\\Employees\\Employees.csproj",
+        "frameworks": {
+          "net472": {
+            "projectReferences": {
+              "E:\\ups\\Employees.Service\\Employees.Service.csproj": {
+                "projectPath": "E:\\ups\\Employees.Service\\Employees.Service.csproj"
+              },
+              "E:\\ups\\Employees.Shared\\Employees.Shared.csproj": {
+                "projectPath": "E:\\ups\\Employees.Shared\\Employees.Shared.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    },
+    "E:\\ups\\TestHelpers\\TestHelpers.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\ups\\TestHelpers\\TestHelpers.csproj",
+        "projectName": "TestHelpers",
+        "projectPath": "E:\\ups\\TestHelpers\\TestHelpers.csproj",
+        "frameworks": {
+          "net472": {
+            "projectReferences": {
+              "E:\\ups\\Employees.Shared\\Employees.Shared.csproj": {
+                "projectPath": "E:\\ups\\Employees.Shared\\Employees.Shared.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    }
+  }
+}
