@@ -1,5 +1,7 @@
 # ManageEmployees
 
+IMPORTANT: User must have internet connection in order for APP to work!!
+
 Please read folowing documents:
 
 **AdditionalPackages.docx**
@@ -11,4 +13,4 @@ Please read folowing documents:
 NOTE: Main entry point for whole solution is under "Employees" project, Program.cs class.
 
 
-Software developed using WinForms and .NET Framwerok 4.7.2.
+Software developed using Visual Studio 2019, WinForms and .NET Framwerok 4.7.2.
