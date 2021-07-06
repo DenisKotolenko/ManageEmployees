@@ -8,7 +8,6 @@
         public const string BaseHostAdress = "https://gorest.co.in/public-api/users";
         public const string Bearer = "Bearer";
         public const string ResponseFormat = "application/json";
-        public static string HostApi = "https://gorest.co.in/public-api";
         public static string FirstPage = "1";
         public static string EditButtonAndColumName = "Edit";
         public static string DeleteButtonAndColumName = "Delete";

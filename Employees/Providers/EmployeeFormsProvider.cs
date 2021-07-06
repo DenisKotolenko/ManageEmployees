@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Forms;
 using Employees.Shared.Constants;
@@ -11,8 +12,11 @@ namespace Employees.Providers
     /// <summary>
     /// Employee forms provider class. Used for providing and working with windows forms controls.
     /// </summary>
+    [ExcludeFromCodeCoverage] //NOTE: Actually this is hard to unit test because of win forms classes. Open for discussion.
     public class EmployeeFormsProvider : IEmployeeFormsProvider
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <inheritdoc />
         public void ClearGrid(DataGridView dataGrid)
         {
@@ -23,6 +27,7 @@ namespace Employees.Providers
                 dataGrid.Columns.RemoveAt(Constants.EditButtonColumn);
             }
             dataGrid.Refresh();
+            log.Info("Grid successfully updated.");
         }
 
         /// <inheritdoc />
@@ -40,6 +45,8 @@ namespace Employees.Providers
 
             ClearGrid(dataGrid);
             FillDataGridViewWithResultsAndButtons(orderedEmployeeList, dataGrid);
+
+            log.Info($"Current page of the grid is: {currentPage}. Limit is: {limit}. Grid successfully filled with: {orderedEmployeeList.Count()} number of employees");
 
             return Tuple.Create(currentPage, limit);
         }

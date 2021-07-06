@@ -9,7 +9,7 @@ namespace Employees.Shared.Helpers
     /// <summary>
     /// Class used for Csv (Coma Separated Values) related manipulation.
     /// </summary>
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage] //static classes are not testable. However testing could be done with wrapper.
     public static class CsvHelper
     {
         private static readonly int DataGridButtonsColumOffset = 2;

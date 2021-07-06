@@ -11,12 +11,21 @@ using Newtonsoft.Json;
 
 namespace Employees.Service
 {
+    /*NOTE: Could be unit tested with wrappers around ApiClient but that will
+    require opening HttpClient (removing static and opening up HttpClient to be set).
+    Did not want to do that because I wanted to force application to only have 1 instance of ApiClient trough whole application.
+    
+    In practice this code MUST be tested as it contains crucial logic for whole application.
+    THIS PART IS OPEN FOR DISCUSSION!
+    */
+
     /// <summary>
-    /// Web service used for communication with web api.
+    /// Employee service class. Used as main point for communication with web api.
     /// </summary>
     public class EmployeeWebService : IEmployeeWebService
     {
         private const string ErrorMessage = "Error";
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         ///<inheritdoc/>
         public async Task<IEmployee> GetEmployeeByIdFromWebApiAsync(int employeeId)
@@ -28,6 +37,7 @@ namespace Employees.Service
                 var webApiResult = await response.Content.ReadAsAsync<HostData>();
                 CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
 
+                log.Info($"Successfully retrieved employee from web api: [{WebRequestMethods.Http.Get}] request LINK: {getByIdUrl}");
                 return webApiResult.Data;
             }
         }
@@ -48,6 +58,7 @@ namespace Employees.Service
                 var webApiResult = await response.Content.ReadAsAsync<HostData>();
                 CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
 
+                log.Info($"Successfully added employee to web api: Method: [{HttpMethod.Post}] request LINK: {Constants.BaseHostAdress} Content: {stringContent}");
                 return webApiResult.Data;
             }
         }
@@ -68,6 +79,7 @@ namespace Employees.Service
                 var webApiResult = await response.Content.ReadAsAsync<HostData>();
                 CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
 
+                log.Info($"Successfully updated employee from web api: Method: [{HttpMethod.Put}] request LINK: {putUrl} with content: {stringContent}");
                 return webApiResult.Data;
             }
         }
@@ -81,6 +93,8 @@ namespace Employees.Service
             {
                 var webApiResult = await response.Content.ReadAsAsync<HostData>();
                 CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
+
+                log.Info($"Successfully deleted employee from web api: Method [{HttpMethod.Delete}] request LINK: {deleteUrl}");
             }
         }
 
@@ -94,6 +108,7 @@ namespace Employees.Service
                 var employeeModelList = await response.Content.ReadAsAsync<HostDataList>();
                 CheckWebApiResultForErrorsAsync(employeeModelList.Code, ErrorMessage);
 
+                log.Info($"Successfully retrieved list of employees from web api: Method: [{HttpMethod.Get}] request LINK: {getByCriteriaUrl}");
                 return employeeModelList;
             }
         }
@@ -102,7 +117,9 @@ namespace Employees.Service
         {
             if (!Enum.IsDefined(typeof(ValidHttpStatusCodeEnum), (int) httpStatusCode))
             {
-                throw new Exception($"ErrorCode: {httpStatusCode} ErrorMessage: {errorMsg}");
+                var errorMessage = $"Error received from web api. HttpStatusCode: {httpStatusCode} ErrorMessage: {errorMsg}";
+                log.Error(errorMessage);
+                throw new Exception(errorMessage);
             }
         }
     }

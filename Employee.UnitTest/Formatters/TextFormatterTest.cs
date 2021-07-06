@@ -1,6 +1,6 @@
 ﻿using Employees.Formatters;
 using Employees.Shared.Models;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -42,11 +42,11 @@ namespace Employees.UnitTest.Formatters
         public void AddEmployeeTextTest()
         {
             // Prepare
-            Mock<IEmployee> mock = PrepareEmployeeMock();
+            IEmployee mock = PrepareEmployeeMock();
             var expectedText = $"Employee with id: {_dummyEmployee.Id} Successfully added. Full data: Name: {_dummyEmployee.Name}, Email: {_dummyEmployee.Email}, Gender: {_dummyEmployee.Gender}, Status: {_dummyEmployee.Status}, Created: {_dummyEmployee.Created}, Updated: {_dummyEmployee.Updated} ";
 
             // Act
-            string result = _textFormatter.AddEmployeeText(mock.Object);
+            string result = _textFormatter.AddEmployeeText(mock);
 
             // Assert
             Assert.AreEqual(expectedText, result);
@@ -84,29 +84,29 @@ namespace Employees.UnitTest.Formatters
         public void GenerateUpdateMessageTest()
         {
             // Prepare
-            Mock<IEmployee> mock = PrepareEmployeeMock();
+            IEmployee mock = PrepareEmployeeMock();
             int id = One;
             var expectedText = $"Updated employee with id: {id} Updated Employee from web api: Name: {_dummyEmployee.Name}, Email: {_dummyEmployee.Email}, Status: {_dummyEmployee.Status}, Gender: {_dummyEmployee.Gender}, Created: {_dummyEmployee.Created.ToLongTimeString()}, Updated: {_dummyEmployee.Updated.ToLongTimeString()}";
 
             // Act
-            string result = _textFormatter.GenerateUpdateMessage(id, mock.Object);
+            string result = _textFormatter.GenerateUpdateMessage(id, mock);
 
             // Assert
             Assert.AreEqual(expectedText, result);
         }
 
-        private Mock<IEmployee> PrepareEmployeeMock()
+        private IEmployee PrepareEmployeeMock()
         {
-            var mock = new Mock<IEmployee>();
-            mock.SetupGet(x => x.Id).Returns(_dummyEmployee.Id);
-            mock.SetupGet(x => x.Name).Returns(_dummyEmployee.Name);
-            mock.SetupGet(x => x.Email).Returns(_dummyEmployee.Email);
-            mock.SetupGet(x => x.Status).Returns(_dummyEmployee.Status);
-            mock.SetupGet(x => x.Gender).Returns(_dummyEmployee.Gender);
-            mock.SetupGet(x => x.Created).Returns(_dummyEmployee.Created);
-            mock.SetupGet(x => x.Updated).Returns(_dummyEmployee.Updated);
+            var sub = Substitute.For<IEmployee>();
+            sub.Id.Returns(_dummyEmployee.Id);
+            sub.Name.Returns(_dummyEmployee.Name);
+            sub.Email.Returns(_dummyEmployee.Email);
+            sub.Status.Returns(_dummyEmployee.Status);
+            sub.Gender.Returns(_dummyEmployee.Gender);
+            sub.Created.Returns(_dummyEmployee.Created);
+            sub.Updated.Returns(_dummyEmployee.Updated);
 
-            return mock;
+            return sub;
         }
     }
 }

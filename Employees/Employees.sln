@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employees.UnitTest", "..\Em
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers", "..\TestHelpers\TestHelpers.csproj", "{71727999-26B6-40EE-9A38-2421F2812711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Employees.Shared.UnitTest", "..\Employees.Shared.UnitTest\Employees.Shared.UnitTest.csproj", "{A31082E9-4CEF-45E5-A608-890514536C60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employees.Shared.UnitTest", "..\Employees.Shared.UnitTest\Employees.Shared.UnitTest.csproj", "{A31082E9-4CEF-45E5-A608-890514536C60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

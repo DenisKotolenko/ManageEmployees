@@ -9,7 +9,7 @@ namespace Employees.Providers
     {
         private int _currentPage;
         private int _maximumNumberOfPages;
-        #region IPageProvider Members
+
         /// <summary>
         /// Sets current page and maximum number of pages.
         /// </summary>
@@ -59,6 +59,5 @@ namespace Employees.Providers
         {
             return _currentPage < _maximumNumberOfPages;
         }
-        #endregion
     }
 }

@@ -12,9 +12,11 @@ namespace Employees.Forms
     /// <summary>
     /// Partial class for edit employee form.
     /// </summary>
-    [ExcludeFromCodeCoverage] //NOTE: Could be tested with implementation of MVP pattern. Will do if needed.
+    [ExcludeFromCodeCoverage] //NOTE: Could be tested with implementation of MVP pattern. Can do if needed. Open for discussion.
     public partial class EditEmployeeForm : Form
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly int _idOfEmployee;
         private readonly int _currentPage;
         private readonly MainForm _mainForm;
@@ -60,6 +62,7 @@ namespace Employees.Forms
             IEmployee result = await _employeeWebService.UpdateEmployeeToWebApiAsync(employee, _idOfEmployee);
 
             MessageBox.Show(_textFormatter.GenerateUpdateMessage(_idOfEmployee, result));
+            log.Info(_textFormatter.GenerateUpdateMessage(_idOfEmployee, result));
             Close();
             var mainFormDataGrid = (DataGridView)Helpers.GetAllControls(_mainForm, typeof(DataGridView)).FirstOrDefault();
             await _mainForm.DefaultRefreshDataGridView(_currentPage, mainFormDataGrid);

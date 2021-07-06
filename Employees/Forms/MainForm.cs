@@ -15,9 +15,11 @@ namespace Employees.Forms
     /// <summary>
     /// Partial MainForm class. Not auto generated.
     /// </summary>
-    [ExcludeFromCodeCoverage] //NOTE: Could be tested with additional MVP design pattern transformations. Will implement if I have time.
+    [ExcludeFromCodeCoverage] //NOTE: Could be tested with implementation of MVP pattern. Can do if needed. Open for discussion.
     public partial class MainForm : Form
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IEmployeeFormsProvider _employeeFormsProvider;
         private readonly IPageProvider _pageProvider;
         private readonly ITextFormatter _textFormatter;
@@ -51,6 +53,8 @@ namespace Employees.Forms
             CurrentPageLabel.Text = currentPageAndLimit.Item1;
             BackPageButton.Enabled = _pageProvider.GetBackButtonAvailability();
             NextPageButton.Enabled = _pageProvider.GetNextButtonAvailability();
+
+            log.Info($"Successfully set up current page and limit on data grid view. Current page {currentPageAndLimit.Item1}. Max page: {currentPageAndLimit.Item2}");
         }
 
         private async void AddEmployeeButton_Click_1(object sender, EventArgs e)
@@ -75,6 +79,7 @@ namespace Employees.Forms
             IEmployee result = await _employeeWebService.AddEmployeeToWebApiAsync(employeeToAdd);
 
             MessageBox.Show(_textFormatter.AddEmployeeText(result));
+            log.Info(_textFormatter.AddEmployeeText(result));
 
             CleanAddEmployeeTabFields();
         }
@@ -111,6 +116,7 @@ namespace Employees.Forms
 
                     await _employeeWebService.DeleteEmployeeFromWebApiAsync(id);
                     MessageBox.Show(_textFormatter.SuccesfullyDeletedEmployeeText(id));
+                    log.Info(_textFormatter.SuccesfullyDeletedEmployeeText(id));
                     await DefaultRefreshDataGridView(_pageProvider.GetCurrentPage(), ViewEmployeeDataGridView);
                 }
             }
@@ -127,6 +133,7 @@ namespace Employees.Forms
             }
             else
             {
+                log.Info(_textFormatter.NoBackPageText(currentPage));
                 MessageBox.Show(_textFormatter.NoBackPageText(currentPage));
             }
         }
@@ -141,6 +148,7 @@ namespace Employees.Forms
             }
             else
             {
+                log.Info(_textFormatter.NoNextPageText(maximumPages));
                 MessageBox.Show(_textFormatter.NoNextPageText(maximumPages));
             }
         }
@@ -158,6 +166,8 @@ namespace Employees.Forms
             _employeeFormsProvider.ClearGrid(ViewEmployeeDataGridView);
             
             NextPageButton.Enabled = false;
+            log.Info("items on tab and grid successfully cleaned.");
+
         }
 
         private void ClearViewTabSearchFields()

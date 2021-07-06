@@ -1,8 +1,0 @@
-E:\ups\Employees.Shared\bin\Debug\Employees.Shared.dll
-E:\ups\Employees.Shared\bin\Debug\Employees.Shared.pdb
-E:\ups\Employees.Shared\bin\Debug\Newtonsoft.Json.dll
-E:\ups\Employees.Shared\bin\Debug\System.ComponentModel.Annotations.dll
-E:\ups\Employees.Shared\bin\Debug\Newtonsoft.Json.xml
-E:\ups\Employees.Shared\obj\Debug\Employees.Shared.csproj.CopyComplete
-E:\ups\Employees.Shared\obj\Debug\Employees.Shared.dll
-E:\ups\Employees.Shared\obj\Debug\Employees.Shared.pdb

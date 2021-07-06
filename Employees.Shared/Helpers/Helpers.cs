@@ -12,9 +12,11 @@ namespace Employees.Shared.Helpers
     /// <summary>
     /// Helper class for various purposes.
     /// </summary>
-    [ExcludeFromCodeCoverage] //static classes are not testable. However this could be done with wrapper.
+    [ExcludeFromCodeCoverage] //static classes are not testable. However testing could be done with wrapper.
     public static class Helpers
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Creates criteria string from dictionary.
         /// </summary>
@@ -86,13 +88,17 @@ namespace Employees.Shared.Helpers
 
             if (string.IsNullOrEmpty(name))
             {
-                MessageBox.Show(@"Empty name field. Please fill in correct name.");
+                const string text = @"Empty name field. Please fill in correct name.";
+                log.Info(text);
+                MessageBox.Show(text);
                 isValid = false;
             }
 
             if (!email.IsValidEmail())
             {
-                MessageBox.Show(@"Email is not valid. Please enter email in format: xxxx@xxxx.xx");
+                const string text = @"Email is not valid. Please enter email in format: xxxx@xxxx.xx";
+                log.Info(text);
+                MessageBox.Show(text);
                 isValid = false;
             }
 
@@ -108,7 +114,8 @@ namespace Employees.Shared.Helpers
         public static IEnumerable<Control> GetAllControls(Control control, Type type)
         {
             IEnumerable<Control> controls = control.Controls.Cast<Control>();
-            return controls.SelectMany(ctrls => GetAllControls(ctrls, type)).Concat(controls).Where(c => c.GetType() == type);
+            List<Control> enumerable = controls.ToList();
+            return enumerable.SelectMany(ctrls => GetAllControls(ctrls, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
 
         /// <summary>

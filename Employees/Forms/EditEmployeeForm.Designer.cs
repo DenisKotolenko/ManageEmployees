@@ -13,7 +13,6 @@ namespace Employees.Forms
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        [ExcludeFromCodeCoverage] //NOTE: auto generated code should not be tested
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -29,7 +28,6 @@ namespace Employees.Forms
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        [ExcludeFromCodeCoverage] //NOTE: auto generated code should not be tested
         private void InitializeComponent()
         {
             this.genderGroupBox = new System.Windows.Forms.GroupBox();
@@ -167,6 +165,8 @@ namespace Employees.Forms
             this.Controls.Add(this.NameTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "EditEmployeeForm";
             this.Text = "Edit Employee";
             this.genderGroupBox.ResumeLayout(false);
