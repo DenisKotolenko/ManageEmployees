@@ -10,6 +10,10 @@ Please read folowing documents:
 
 **Software Requirement Specification.docx**
 
+Orginal assignment is under:
+
+**IT Assessment.docx**
+
 NOTE: Main entry point for whole solution is under "Employees" project, Program.cs class.
 
 
