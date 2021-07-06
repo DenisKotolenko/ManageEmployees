@@ -17,6 +17,15 @@ namespace Employees.Service
         private const string Token = "fa114107311259f5f33e70a5d85de34a2499b4401da069af0b1d835cd5ec0d56";
 
         /// <summary>
+        /// This static constructor ensures thread safety. Details on Jon Skeet article: https://csharpindepth.com/articles/singleton
+        /// </summary>
+        static ApiClient() 
+        {
+            //Explicit static constructor to tell C# compiler
+            //not to mark type as before field initialization
+        }
+
+        /// <summary>
         /// HttpClient used for communicating over HTTP to host web api.
         /// </summary>
         public static HttpClient RestApiClient { get; private set; } = new HttpClient();
