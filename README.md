@@ -1,6 +1,6 @@
 # ManageEmployees
 
-IMPORTANT: User must have 
+IMPORTANT: User must have internet connection in order for APP to work!!
 
 Please read folowing documents:
 
