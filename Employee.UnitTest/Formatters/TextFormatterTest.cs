@@ -43,7 +43,7 @@ namespace Employees.UnitTest.Formatters
         {
             // Prepare
             IEmployee mock = PrepareEmployeeMock();
-            var expectedText = $"Employee with id: {_dummyEmployee.Id} Successfully added. Full data: Name: {_dummyEmployee.Name}, Email: {_dummyEmployee.Email}, Gender: {_dummyEmployee.Gender}, Status: {_dummyEmployee.Status}, Created: {_dummyEmployee.Created}, Updated: {_dummyEmployee.Updated} ";
+            var expectedText = $"Employee with id: {_dummyEmployee.Id} Successfully added. Full data: Name: {_dummyEmployee.Name}, Email: {_dummyEmployee.Email}, Gender: {_dummyEmployee.Gender}, Status: {_dummyEmployee.Status}";
 
             // Act
             string result = _textFormatter.AddEmployeeText(mock);
@@ -86,7 +86,7 @@ namespace Employees.UnitTest.Formatters
             // Prepare
             IEmployee mock = PrepareEmployeeMock();
             int id = One;
-            var expectedText = $"Updated employee with id: {id} Updated Employee from web api: Name: {_dummyEmployee.Name}, Email: {_dummyEmployee.Email}, Status: {_dummyEmployee.Status}, Gender: {_dummyEmployee.Gender}, Created: {_dummyEmployee.Created.ToLongTimeString()}, Updated: {_dummyEmployee.Updated.ToLongTimeString()}";
+            var expectedText = $"Updated employee with id: {id} Updated Employee from web api: Name: {_dummyEmployee.Name}, Email: {_dummyEmployee.Email}, Status: {_dummyEmployee.Status}, Gender: {_dummyEmployee.Gender}";
 
             // Act
             string result = _textFormatter.GenerateUpdateMessage(id, mock);
@@ -103,8 +103,6 @@ namespace Employees.UnitTest.Formatters
             sub.Email.Returns(_dummyEmployee.Email);
             sub.Status.Returns(_dummyEmployee.Status);
             sub.Gender.Returns(_dummyEmployee.Gender);
-            sub.Created.Returns(_dummyEmployee.Created);
-            sub.Updated.Returns(_dummyEmployee.Updated);
 
             return sub;
         }

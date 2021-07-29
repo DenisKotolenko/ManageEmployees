@@ -33,16 +33,6 @@ namespace Employees.Shared.Models
         string Status { get; set; }
 
         /// <summary>
-        /// Employee creation date and time.
-        /// </summary>
-        DateTime Created { get; set; }
-
-        /// <summary>
-        /// Employee update date and time.
-        /// </summary>
-        DateTime Updated { get; set; }
-
-        /// <summary>
         /// Error message.
         /// </summary>
         string ErrorMessage { get; set; }

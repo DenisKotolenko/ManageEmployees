@@ -45,7 +45,7 @@ namespace Employees.Shared.Helpers
             foreach (Control ct in controls)
             {
                 var radioButton = (RadioButton) ct;
-                if (radioButton.Text == radioButtonText)
+                if (radioButton.Text.ToLower() == radioButtonText)
                 {
                     radioButton.Checked = true;
                 }
@@ -61,7 +61,7 @@ namespace Employees.Shared.Helpers
         {
             RadioButton statusGroupCheckedRadioButton = groupBox.Controls.OfType<RadioButton>()
                                                                 .FirstOrDefault(r => r.Checked);
-            return statusGroupCheckedRadioButton != null ? statusGroupCheckedRadioButton.Text : string.Empty;
+            return statusGroupCheckedRadioButton != null ? statusGroupCheckedRadioButton.Text.ToLower() : string.Empty;
         }
 
         /// <summary>
@@ -148,8 +148,6 @@ namespace Employees.Shared.Helpers
                 employee.Email,
                 employee.Gender,
                 employee.Status,
-                employee.Created.ToLongTimeString(),
-                employee.Updated.ToLongTimeString(),
             };
         }
 

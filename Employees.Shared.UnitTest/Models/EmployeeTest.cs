@@ -29,8 +29,6 @@ namespace Employees.Shared.UnitTest.Models
                 Name = _dummyEmployee.Name,
                 Gender = _dummyEmployee.Gender,
                 Status = _dummyEmployee.Status,
-                Created = _dummyEmployee.Created,
-                Updated = _dummyEmployee.Updated,
                 ErrorMessage = ErrorMessage,
                 Email = _dummyEmployee.Email,
                 ErrorField = ErrorField,
@@ -42,8 +40,6 @@ namespace Employees.Shared.UnitTest.Models
             Assert.AreEqual(_dummyEmployee.Gender, createEmployee.Gender);
             Assert.AreEqual(_dummyEmployee.Status, createEmployee.Status);
             Assert.AreEqual(_dummyEmployee.Email, createEmployee.Email);
-            Assert.AreEqual(_dummyEmployee.Created, createEmployee.Created);
-            Assert.AreEqual(_dummyEmployee.Updated, createEmployee.Updated);
             Assert.AreEqual(ErrorField, createEmployee.ErrorField);
             Assert.AreEqual(ErrorMessage, createEmployee.ErrorMessage);
         }

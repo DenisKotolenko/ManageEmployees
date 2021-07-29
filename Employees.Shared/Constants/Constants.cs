@@ -11,8 +11,8 @@
         public static string FirstPage = "1";
         public static string EditButtonAndColumName = "Edit";
         public static string DeleteButtonAndColumName = "Delete";
-        public static int EditButtonColumn = 7;
-        public static int DeleteButtonColumn = 8;
+        public static int EditButtonColumn = 5;
+        public static int DeleteButtonColumn = 6;
         public static int IdColumn = 0;
         public const string QuestionMarkHttpDelimeter = "?";
         public const string AndHttpDelimeter = "&";

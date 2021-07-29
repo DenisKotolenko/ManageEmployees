@@ -30,14 +30,6 @@ namespace Employees.Shared.Models
         public string Status { get; set; }
 
         ///<inheritdoc/>
-        [JsonProperty("created_at")]
-        public DateTime Created { get; set; }
-
-        ///<inheritdoc/>
-        [JsonProperty("updated_at")]
-        public DateTime Updated { get; set; }
-
-        ///<inheritdoc/>
         [JsonProperty("message")]
         public string ErrorMessage { get; set; }
 

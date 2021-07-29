@@ -42,13 +42,6 @@
             this.InactiveStatusSearchRadioButton = new System.Windows.Forms.RadioButton();
             this.ActiveStatusSearchRadioButton = new System.Windows.Forms.RadioButton();
             this.ViewEmployeeDataGridView = new System.Windows.Forms.DataGridView();
-            this.IdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EmailColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GenderColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CreatedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UpdatedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SearchButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.IdSearchTextBox = new System.Windows.Forms.TextBox();
@@ -68,6 +61,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.IdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EmailColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.GenderColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ViewTabPage.SuspendLayout();
             this.GenderSearchGroupBox.SuspendLayout();
             this.StatusSearchGroupBox.SuspendLayout();
@@ -231,9 +229,7 @@
             this.NameColumn,
             this.EmailColumn,
             this.GenderColumn,
-            this.StatusColumn,
-            this.CreatedColumn,
-            this.UpdatedColumn});
+            this.StatusColumn});
             this.ViewEmployeeDataGridView.Location = new System.Drawing.Point(167, 15);
             this.ViewEmployeeDataGridView.Margin = new System.Windows.Forms.Padding(3, 3, 3, 2);
             this.ViewEmployeeDataGridView.Name = "ViewEmployeeDataGridView";
@@ -242,52 +238,6 @@
             this.ViewEmployeeDataGridView.Size = new System.Drawing.Size(849, 384);
             this.ViewEmployeeDataGridView.TabIndex = 10;
             this.ViewEmployeeDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ViewEmployeeDataGridView_CellContentClick);
-            // 
-            // IdColumn
-            // 
-            this.IdColumn.HeaderText = "ID";
-            this.IdColumn.Name = "IdColumn";
-            this.IdColumn.ReadOnly = true;
-            this.IdColumn.Width = 50;
-            // 
-            // NameColumn
-            // 
-            this.NameColumn.HeaderText = "Name";
-            this.NameColumn.Name = "NameColumn";
-            this.NameColumn.ReadOnly = true;
-            // 
-            // EmailColumn
-            // 
-            this.EmailColumn.HeaderText = "Email";
-            this.EmailColumn.Name = "EmailColumn";
-            this.EmailColumn.ReadOnly = true;
-            this.EmailColumn.Width = 150;
-            // 
-            // GenderColumn
-            // 
-            this.GenderColumn.HeaderText = "Gender";
-            this.GenderColumn.Name = "GenderColumn";
-            this.GenderColumn.ReadOnly = true;
-            this.GenderColumn.Width = 50;
-            // 
-            // StatusColumn
-            // 
-            this.StatusColumn.HeaderText = "Status";
-            this.StatusColumn.Name = "StatusColumn";
-            this.StatusColumn.ReadOnly = true;
-            this.StatusColumn.Width = 50;
-            // 
-            // CreatedColumn
-            // 
-            this.CreatedColumn.HeaderText = "Created";
-            this.CreatedColumn.Name = "CreatedColumn";
-            this.CreatedColumn.ReadOnly = true;
-            // 
-            // UpdatedColumn
-            // 
-            this.UpdatedColumn.HeaderText = "Updated";
-            this.UpdatedColumn.Name = "UpdatedColumn";
-            this.UpdatedColumn.ReadOnly = true;
             // 
             // SearchButton
             // 
@@ -478,6 +428,40 @@
             this.tabControl1.Size = new System.Drawing.Size(1067, 481);
             this.tabControl1.TabIndex = 16;
             // 
+            // IdColumn
+            // 
+            this.IdColumn.HeaderText = "ID";
+            this.IdColumn.Name = "IdColumn";
+            this.IdColumn.ReadOnly = true;
+            this.IdColumn.Width = 50;
+            // 
+            // NameColumn
+            // 
+            this.NameColumn.HeaderText = "Name";
+            this.NameColumn.Name = "NameColumn";
+            this.NameColumn.ReadOnly = true;
+            // 
+            // EmailColumn
+            // 
+            this.EmailColumn.HeaderText = "Email";
+            this.EmailColumn.Name = "EmailColumn";
+            this.EmailColumn.ReadOnly = true;
+            this.EmailColumn.Width = 150;
+            // 
+            // GenderColumn
+            // 
+            this.GenderColumn.HeaderText = "Gender";
+            this.GenderColumn.Name = "GenderColumn";
+            this.GenderColumn.ReadOnly = true;
+            this.GenderColumn.Width = 50;
+            // 
+            // StatusColumn
+            // 
+            this.StatusColumn.HeaderText = "Status";
+            this.StatusColumn.Name = "StatusColumn";
+            this.StatusColumn.ReadOnly = true;
+            this.StatusColumn.Width = 50;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -548,7 +532,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn EmailColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn GenderColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn StatusColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CreatedColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn UpdatedColumn;
     }
 }

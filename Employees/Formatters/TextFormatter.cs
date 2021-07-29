@@ -16,7 +16,7 @@ namespace Employees.Formatters
         /// <inheritdoc />
         public string AddEmployeeText(IEmployee result)
         {
-            return $"Employee with id: {result.Id} Successfully added. Full data: Name: {result.Name}, Email: {result.Email}, Gender: {result.Gender}, Status: {result.Status}, Created: {result.Created}, Updated: {result.Updated} ";
+            return $"Employee with id: {result.Id} Successfully added. Full data: Name: {result.Name}, Email: {result.Email}, Gender: {result.Gender}, Status: {result.Status}";
         }
 
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace Employees.Formatters
         /// <inheritdoc />
         public string GenerateUpdateMessage(int id, IEmployee employee)
         {
-            return $"Updated employee with id: {id} Updated Employee from web api: Name: {employee.Name}, Email: {employee.Email}, Status: {employee.Status}, Gender: {employee.Gender}, Created: {employee.Created.ToLongTimeString()}, Updated: {employee.Updated.ToLongTimeString()}";
+            return $"Updated employee with id: {id} Updated Employee from web api: Name: {employee.Name}, Email: {employee.Email}, Status: {employee.Status}, Gender: {employee.Gender}";
         }
     }
 }
