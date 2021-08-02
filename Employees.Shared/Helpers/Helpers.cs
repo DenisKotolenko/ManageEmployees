@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Windows.Forms;
+using Employees.Shared.Constants;
 using Employees.Shared.Models;
 
 namespace Employees.Shared.Helpers
@@ -165,6 +168,21 @@ namespace Employees.Shared.Helpers
                 {
                     radioButton.Checked = false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Check received HTTP status code against list of available HTTP status codes and throw exception.
+        /// </summary>
+        /// <param name="httpStatusCode">Received status code.</param>
+        /// <param name="errorMsg">Error message to show.</param>
+        public static void CheckWebApiResultForErrorsAsync(HttpStatusCode httpStatusCode, string errorMsg)
+        {
+            if (!Enum.IsDefined(typeof(ValidHttpStatusCodeEnum), (int)httpStatusCode))
+            {
+                var errorMessage = $"Error received from web api. HttpStatusCode: {httpStatusCode} ErrorMessage: {errorMsg}";
+                log.Error(errorMessage);
+                throw new HttpException(errorMessage);
             }
         }
     }

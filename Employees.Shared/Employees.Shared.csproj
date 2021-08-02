@@ -57,6 +57,7 @@
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Constants\ValidHttpStatusCodeEnum.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
+    <Compile Include="Helpers\ErrorMessageHelper.cs" />
     <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Models\Criteria.cs" />
     <Compile Include="Models\Employee.cs" />

@@ -18,5 +18,7 @@
         public const string AndHttpDelimeter = "&";
         public const string EqualHttpDelimeter = "=";
         public const string SlashHttpDelimeter = "/";
+        public const string ErrorMessageTitle = "Error Happened";
+        public const int CacheKeyExpirationInSeconds = 10;
     }
 }

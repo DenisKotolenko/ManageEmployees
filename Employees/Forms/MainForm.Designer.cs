@@ -440,27 +440,28 @@
             this.NameColumn.HeaderText = "Name";
             this.NameColumn.Name = "NameColumn";
             this.NameColumn.ReadOnly = true;
+            this.NameColumn.Width = 200;
             // 
             // EmailColumn
             // 
             this.EmailColumn.HeaderText = "Email";
             this.EmailColumn.Name = "EmailColumn";
             this.EmailColumn.ReadOnly = true;
-            this.EmailColumn.Width = 150;
+            this.EmailColumn.Width = 200;
             // 
             // GenderColumn
             // 
             this.GenderColumn.HeaderText = "Gender";
             this.GenderColumn.Name = "GenderColumn";
             this.GenderColumn.ReadOnly = true;
-            this.GenderColumn.Width = 50;
+            this.GenderColumn.Width = 80;
             // 
             // StatusColumn
             // 
             this.StatusColumn.HeaderText = "Status";
             this.StatusColumn.Name = "StatusColumn";
             this.StatusColumn.ReadOnly = true;
-            this.StatusColumn.Width = 50;
+            this.StatusColumn.Width = 80;
             // 
             // MainForm
             // 

@@ -105,6 +105,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Employees.Repository\Employees.Repository.csproj">
+      <Project>{07693873-99A9-457F-9902-78BE1A85F854}</Project>
+      <Name>Employees.Repository</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Employees.Service\Employees.Service.csproj">
       <Project>{0447a743-494b-4c53-b2ad-0b1c3bb180d5}</Project>
       <Name>Employees.Service</Name>

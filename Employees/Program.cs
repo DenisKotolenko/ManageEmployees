@@ -2,7 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 using Employees.Forms;
+using Employees.Repository.Repo;
 using Employees.Service;
+using Employees.Shared.Helpers;
 
 namespace Employees
 {
@@ -18,12 +20,20 @@ namespace Employees
         [STAThread]
         public static void Main()
         {
-            ApiClient.InitializeClient();
-            IEmployeeWebService webService = new EmployeeWebService();
+            try
+            {
+                ApiClient.InitializeClient();
+                IEmployeesRepository employeesRepository = new EmployeesRepository();
+                IEmployeeWebService webService = new EmployeeWebService(employeesRepository);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm(webService));
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainForm(webService));
+            }
+            catch (Exception ex)
+            {
+                MessageHelpers.GenerateErrorMessageBox(ex);
+            }
         }
     }
 }

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers", "..\TestHelpe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employees.Shared.UnitTest", "..\Employees.Shared.UnitTest\Employees.Shared.UnitTest.csproj", "{A31082E9-4CEF-45E5-A608-890514536C60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Employees.Repository", "..\Employees.Repository\Employees.Repository.csproj", "{07693873-99A9-457F-9902-78BE1A85F854}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{A31082E9-4CEF-45E5-A608-890514536C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A31082E9-4CEF-45E5-A608-890514536C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A31082E9-4CEF-45E5-A608-890514536C60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07693873-99A9-457F-9902-78BE1A85F854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07693873-99A9-457F-9902-78BE1A85F854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07693873-99A9-457F-9902-78BE1A85F854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07693873-99A9-457F-9902-78BE1A85F854}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -45,16 +45,23 @@ namespace Employees.Forms
         /// <returns>Current task.</returns>
         public async Task DefaultRefreshDataGridView(int page, DataGridView dataGrid)
         {
-            IHostDataList resultWithMetaData = await _employeeWebService.ViewEmployeesByCriteriaFromWebApiAsync(GetCriteria(page));
+            try
+            {
+                IHostDataList resultWithMetaData = await _employeeWebService.ViewEmployeesByCriteriaFromWebApiAsync(GetCriteria(page));
 
-            Tuple<string, string> currentPageAndLimit = _employeeFormsProvider.RefreshDataGridViewWithCriteria(dataGrid, page, resultWithMetaData);
+                Tuple<string, string> currentPageAndLimit = _employeeFormsProvider.RefreshDataGridViewWithCriteria(dataGrid, page, resultWithMetaData);
 
-            _pageProvider.SetCurrentPageAndLimit(currentPageAndLimit.Item1, currentPageAndLimit.Item2);
-            CurrentPageLabel.Text = currentPageAndLimit.Item1;
-            BackPageButton.Enabled = _pageProvider.GetBackButtonAvailability();
-            NextPageButton.Enabled = _pageProvider.GetNextButtonAvailability();
+                _pageProvider.SetCurrentPageAndLimit(currentPageAndLimit.Item1, currentPageAndLimit.Item2);
+                CurrentPageLabel.Text = currentPageAndLimit.Item1;
+                BackPageButton.Enabled = _pageProvider.GetBackButtonAvailability();
+                NextPageButton.Enabled = _pageProvider.GetNextButtonAvailability();
 
-            log.Info($"Successfully set up current page and limit on data grid view. Current page {currentPageAndLimit.Item1}. Max page: {currentPageAndLimit.Item2}");
+                log.Info($"Successfully set up current page and limit on data grid view. Current page {currentPageAndLimit.Item1}. Max page: {currentPageAndLimit.Item2}");
+            }
+            catch (Exception ex)
+            {
+                MessageHelpers.GenerateErrorMessageBox(ex);
+            }
         }
 
         private async void AddEmployeeButton_Click_1(object sender, EventArgs e)
@@ -76,18 +83,32 @@ namespace Employees.Forms
                 Status = Helpers.GetCheckedRadioButtonOnGroupBox(statusGroupBox),
             };
 
-            IEmployee result = await _employeeWebService.AddEmployeeToWebApiAsync(employeeToAdd);
+            try
+            {
+                IEmployee result = await _employeeWebService.AddEmployeeToWebApiAsync(employeeToAdd);
 
-            MessageBox.Show(_textFormatter.AddEmployeeText(result));
-            log.Info(_textFormatter.AddEmployeeText(result));
+                MessageBox.Show(_textFormatter.AddEmployeeText(result));
+                log.Info(_textFormatter.AddEmployeeText(result));
 
-            CleanAddEmployeeTabFields();
+                CleanAddEmployeeTabFields();
+            }
+            catch (Exception ex)
+            {
+                MessageHelpers.GenerateErrorMessageBox(ex);
+            }
         }
 
         private async void ViewTabSearchButton_Click(object sender, EventArgs e)
         {
-            _pageProvider.SetCurrentPageAndLimit(Constants.FirstPage, string.Empty);
-            await DefaultRefreshDataGridView(_pageProvider.GetCurrentPage(), ViewEmployeeDataGridView);
+            try
+            {
+                _pageProvider.SetCurrentPageAndLimit(Constants.FirstPage, string.Empty);
+                await DefaultRefreshDataGridView(_pageProvider.GetCurrentPage(), ViewEmployeeDataGridView);
+            }
+            catch (Exception ex)
+            {
+                MessageHelpers.GenerateErrorMessageBox(ex);
+            }
         }
 
         /// <summary>
@@ -98,58 +119,79 @@ namespace Employees.Forms
         /// <param name="e"></param>
         private async void ViewEmployeeDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == Constants.EditButtonColumn)
+            try
             {
-                int id = _employeeFormsProvider.GetIdFromDataGrid(ViewEmployeeDataGridView, e);
-
-                IEmployee employeeForEdit = await _employeeWebService.GetEmployeeByIdFromWebApiAsync(id);
-
-                var editEmployeeForm = new EditEmployeeForm(employeeForEdit, _pageProvider.GetCurrentPage(), this, _employeeWebService);
-                editEmployeeForm.Show();
-            }
-
-            else
-            {
-                if (e.ColumnIndex == Constants.DeleteButtonColumn)
+                if (e.ColumnIndex == Constants.EditButtonColumn)
                 {
                     int id = _employeeFormsProvider.GetIdFromDataGrid(ViewEmployeeDataGridView, e);
 
-                    await _employeeWebService.DeleteEmployeeFromWebApiAsync(id);
-                    MessageBox.Show(_textFormatter.SuccesfullyDeletedEmployeeText(id));
-                    log.Info(_textFormatter.SuccesfullyDeletedEmployeeText(id));
-                    await DefaultRefreshDataGridView(_pageProvider.GetCurrentPage(), ViewEmployeeDataGridView);
+                    IEmployee employeeForEdit = await _employeeWebService.GetEmployeeByIdFromWebApiAsync(id);
+
+                    var editEmployeeForm = new EditEmployeeForm(employeeForEdit, _pageProvider.GetCurrentPage(), this, _employeeWebService);
+                    editEmployeeForm.Show();
                 }
+
+                else
+                {
+                    if (e.ColumnIndex == Constants.DeleteButtonColumn)
+                    {
+                        int id = _employeeFormsProvider.GetIdFromDataGrid(ViewEmployeeDataGridView, e);
+
+                        await _employeeWebService.DeleteEmployeeFromWebApiAsync(id);
+                        MessageBox.Show(_textFormatter.SuccesfullyDeletedEmployeeText(id));
+                        log.Info(_textFormatter.SuccesfullyDeletedEmployeeText(id));
+                        await DefaultRefreshDataGridView(_pageProvider.GetCurrentPage(), ViewEmployeeDataGridView);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageHelpers.GenerateErrorMessageBox(ex);
             }
         }
 
         private async void BackPageButton_Click(object sender, EventArgs e)
         {
-            int currentPage = _pageProvider.GetCurrentPage();
-            int backPage = currentPage - 1;
+            try
+            {
+                int currentPage = _pageProvider.GetCurrentPage();
+                int backPage = currentPage - 1;
 
-            if (backPage > 0)
-            {
-                await DefaultRefreshDataGridView(backPage, ViewEmployeeDataGridView);
+                if (backPage > 0)
+                {
+                    await DefaultRefreshDataGridView(backPage, ViewEmployeeDataGridView);
+                }
+                else
+                {
+                    log.Info(_textFormatter.NoBackPageText(currentPage));
+                    MessageBox.Show(_textFormatter.NoBackPageText(currentPage));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                log.Info(_textFormatter.NoBackPageText(currentPage));
-                MessageBox.Show(_textFormatter.NoBackPageText(currentPage));
+                MessageHelpers.GenerateErrorMessageBox(ex);
             }
         }
 
         private async void NextPageButton_Click(object sender, EventArgs e)
         {
-            int maximumPages = _pageProvider.GetMaximumNumberOfPages();
-            int nextPage = _pageProvider.GetCurrentPage() + 1;
-            if (nextPage <= maximumPages)
+            try
             {
-                await DefaultRefreshDataGridView(nextPage, ViewEmployeeDataGridView);
+                int maximumPages = _pageProvider.GetMaximumNumberOfPages();
+                int nextPage = _pageProvider.GetCurrentPage() + 1;
+                if (nextPage <= maximumPages)
+                {
+                    await DefaultRefreshDataGridView(nextPage, ViewEmployeeDataGridView);
+                }
+                else
+                {
+                    log.Info(_textFormatter.NoNextPageText(maximumPages));
+                    MessageBox.Show(_textFormatter.NoNextPageText(maximumPages));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                log.Info(_textFormatter.NoNextPageText(maximumPages));
-                MessageBox.Show(_textFormatter.NoNextPageText(maximumPages));
+                MessageHelpers.GenerateErrorMessageBox(ex);
             }
         }
 
@@ -160,14 +202,20 @@ namespace Employees.Forms
 
         private async void ClearButton_Click_1(object sender, EventArgs e)
         {
-            ClearViewTabSearchFields();
-            _pageProvider.SetCurrentPageAndLimit(Constants.FirstPage, string.Empty);
-            await DefaultRefreshDataGridView(int.Parse(Constants.FirstPage), ViewEmployeeDataGridView);
-            _employeeFormsProvider.ClearGrid(ViewEmployeeDataGridView);
-            
-            NextPageButton.Enabled = false;
-            log.Info("items on tab and grid successfully cleaned.");
+            try
+            {
+                ClearViewTabSearchFields();
+                _pageProvider.SetCurrentPageAndLimit(Constants.FirstPage, string.Empty);
+                await DefaultRefreshDataGridView(int.Parse(Constants.FirstPage), ViewEmployeeDataGridView);
+                _employeeFormsProvider.ClearGrid(ViewEmployeeDataGridView);
 
+                NextPageButton.Enabled = false;
+                log.Info("items on tab and grid successfully cleaned.");
+            }
+            catch (Exception ex)
+            {
+                MessageHelpers.GenerateErrorMessageBox(ex);
+            }
         }
 
         private void ClearViewTabSearchFields()

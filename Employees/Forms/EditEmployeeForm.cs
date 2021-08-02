@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Employees.Formatters;
 using Employees.Service;
+using Employees.Shared.Constants;
 using Employees.Shared.Helpers;
 using Employees.Shared.Models;
 
@@ -59,13 +60,20 @@ namespace Employees.Forms
                 Status = Helpers.GetCheckedRadioButtonOnGroupBox(statusGroupBox),
             };
 
-            IEmployee result = await _employeeWebService.UpdateEmployeeToWebApiAsync(employee, _idOfEmployee);
+            try
+            {
+                IEmployee result = await _employeeWebService.UpdateEmployeeToWebApiAsync(employee, _idOfEmployee);
 
-            MessageBox.Show(_textFormatter.GenerateUpdateMessage(_idOfEmployee, result));
-            log.Info(_textFormatter.GenerateUpdateMessage(_idOfEmployee, result));
-            Close();
-            var mainFormDataGrid = (DataGridView)Helpers.GetAllControls(_mainForm, typeof(DataGridView)).FirstOrDefault();
-            await _mainForm.DefaultRefreshDataGridView(_currentPage, mainFormDataGrid);
+                MessageBox.Show(_textFormatter.GenerateUpdateMessage(_idOfEmployee, result));
+                log.Info(_textFormatter.GenerateUpdateMessage(_idOfEmployee, result));
+                Close();
+                var mainFormDataGrid = (DataGridView)Helpers.GetAllControls(_mainForm, typeof(DataGridView)).FirstOrDefault();
+                await _mainForm.DefaultRefreshDataGridView(_currentPage, mainFormDataGrid);
+            }
+            catch (Exception ex)
+            {
+                MessageHelpers.GenerateErrorMessageBox(ex);
+            }
         }
 
         private void PopulateFields(IEmployee employee)
