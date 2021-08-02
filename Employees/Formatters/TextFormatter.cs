@@ -36,5 +36,10 @@ namespace Employees.Formatters
         {
             return $"Updated employee with id: {id} Updated Employee from web api: Name: {employee.Name}, Email: {employee.Email}, Status: {employee.Status}, Gender: {employee.Gender}";
         }
+
+        public string GenerateCleanedGridMessage()
+        {
+            return "items on tab and grid successfully cleaned.";
+        }
     }
 }

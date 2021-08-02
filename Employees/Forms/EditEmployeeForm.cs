@@ -72,7 +72,7 @@ namespace Employees.Forms
             }
             catch (Exception ex)
             {
-                MessageHelpers.GenerateErrorMessageBox(ex);
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
             }
         }
 

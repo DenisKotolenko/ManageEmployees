@@ -89,7 +89,6 @@
   <ItemGroup>
     <Compile Include="Cache\MemoryCacheExtensions.cs" />
     <Compile Include="Client\ApiClient.cs" />
-    <Compile Include="Client\IApiClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repo\EmployeesRepository.cs" />
     <Compile Include="Repo\IEmployeesRepository.cs" />

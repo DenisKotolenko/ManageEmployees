@@ -1,9 +1,8 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using Employees.Shared.Constants;
 
-namespace Employees.Service
+namespace Employees.Repository.Client
 {
     /// <summary>
     /// Class for web api client.
@@ -35,10 +34,7 @@ namespace Employees.Service
         /// </summary>
         public static void InitializeClient()
         {
-            RestApiClient = new HttpClient
-            {
-                BaseAddress = new Uri(Constants.BaseHostAdress)
-            };
+            RestApiClient = new HttpClient();
             RestApiClient.DefaultRequestHeaders.Accept.Clear();
             RestApiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Constants.Bearer, Token);
             RestApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.ResponseFormat));

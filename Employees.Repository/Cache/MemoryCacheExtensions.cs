@@ -9,6 +9,8 @@ namespace Employees.Repository.Cache
     /// </summary>
     public static class MemoryCacheExtensions
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Extension method to provide thread safe and lazy caching.
         /// </summary>
@@ -21,19 +23,30 @@ namespace Employees.Repository.Cache
         public static Task<T> GetOrCreateLazyAsync<T>(this IMemoryCache cache, object cacheKey,
                                                       Func<Task<T>> functionResultToCache, DateTimeOffset absoluteExpiration)
         {
-            if (!cache.TryGetValue(cacheKey, out Lazy<Task<T>> lazy))
+            try
             {
-                ICacheEntry entry = cache.CreateEntry(cacheKey);
-                entry.SetOptions(new MemoryCacheEntryOptions()
+                if (!cache.TryGetValue(cacheKey, out Lazy<Task<T>> lazy))
                 {
-                    AbsoluteExpiration = absoluteExpiration,
-                });
-                var lazyFunction = new Lazy<Task<T>>(functionResultToCache);
-                entry.Value = lazyFunction;
-                entry.Dispose(); // Dispose actually inserts the entry in the cache
-                if (!cache.TryGetValue(cacheKey, out lazy)) lazy = lazyFunction;
+                    ICacheEntry entry = cache.CreateEntry(cacheKey);
+                    entry.SetOptions(new MemoryCacheEntryOptions()
+                    {
+                        AbsoluteExpiration = absoluteExpiration,
+                    });
+                    var lazyFunction = new Lazy<Task<T>>(functionResultToCache);
+                    entry.Value = lazyFunction;
+                    entry.Dispose(); // Dispose actually inserts the entry in the cache
+                    if (!cache.TryGetValue(cacheKey, out lazy)) lazy = lazyFunction;
+                }
+
+                return ToAsyncConditional(lazy.Value);
             }
-            return ToAsyncConditional(lazy.Value);
+            catch (Exception e)
+            {
+                log.Error(e.StackTrace);
+                log.Error(e.Message);
+                log.Error(e.InnerException);
+                throw;
+            }
         }
         
         private static Task<TResult> ToAsyncConditional<TResult>(Task<TResult> task)

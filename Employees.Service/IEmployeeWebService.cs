@@ -44,5 +44,11 @@ namespace Employees.Service
         /// <param name="criteria">Dictionary for HTTP field criteria.</param>
         /// <returns>List of selected employees.</returns>
         Task<IHostDataList> ViewEmployeesByCriteriaFromWebApiAsync(Dictionary<string, string> criteria);
+
+        /// <summary>
+        /// Checks if rest web api is on line.
+        /// </summary>
+        /// <returns>List of employees.</returns>
+        Task CheckIfRestApiIsOnline();
     }
 }

@@ -36,7 +36,7 @@ namespace Employees.Forms
             _textFormatter = new TextFormatter();
             InitializeComponent();
         }
-
+        
         /// <summary>
         /// Used for refreshing grid. This method is used by other forms.
         /// </summary>
@@ -60,7 +60,7 @@ namespace Employees.Forms
             }
             catch (Exception ex)
             {
-                MessageHelpers.GenerateErrorMessageBox(ex);
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
             }
         }
 
@@ -94,7 +94,7 @@ namespace Employees.Forms
             }
             catch (Exception ex)
             {
-                MessageHelpers.GenerateErrorMessageBox(ex);
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
             }
         }
 
@@ -107,7 +107,7 @@ namespace Employees.Forms
             }
             catch (Exception ex)
             {
-                MessageHelpers.GenerateErrorMessageBox(ex);
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
             }
         }
 
@@ -131,32 +131,29 @@ namespace Employees.Forms
                     editEmployeeForm.Show();
                 }
 
-                else
+                else if (e.ColumnIndex == Constants.DeleteButtonColumn)
                 {
-                    if (e.ColumnIndex == Constants.DeleteButtonColumn)
-                    {
                         int id = _employeeFormsProvider.GetIdFromDataGrid(ViewEmployeeDataGridView, e);
 
                         await _employeeWebService.DeleteEmployeeFromWebApiAsync(id);
                         MessageBox.Show(_textFormatter.SuccesfullyDeletedEmployeeText(id));
                         log.Info(_textFormatter.SuccesfullyDeletedEmployeeText(id));
                         await DefaultRefreshDataGridView(_pageProvider.GetCurrentPage(), ViewEmployeeDataGridView);
-                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageHelpers.GenerateErrorMessageBox(ex);
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
             }
         }
 
         private async void BackPageButton_Click(object sender, EventArgs e)
         {
+            int currentPage = _pageProvider.GetCurrentPage();
+            int backPage = currentPage - 1;
+
             try
             {
-                int currentPage = _pageProvider.GetCurrentPage();
-                int backPage = currentPage - 1;
-
                 if (backPage > 0)
                 {
                     await DefaultRefreshDataGridView(backPage, ViewEmployeeDataGridView);
@@ -169,16 +166,17 @@ namespace Employees.Forms
             }
             catch (Exception ex)
             {
-                MessageHelpers.GenerateErrorMessageBox(ex);
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
             }
         }
 
         private async void NextPageButton_Click(object sender, EventArgs e)
         {
+            int maximumPages = _pageProvider.GetMaximumNumberOfPages();
+            int nextPage = _pageProvider.GetCurrentPage() + 1;
+
             try
             {
-                int maximumPages = _pageProvider.GetMaximumNumberOfPages();
-                int nextPage = _pageProvider.GetCurrentPage() + 1;
                 if (nextPage <= maximumPages)
                 {
                     await DefaultRefreshDataGridView(nextPage, ViewEmployeeDataGridView);
@@ -191,13 +189,21 @@ namespace Employees.Forms
             }
             catch (Exception ex)
             {
-                MessageHelpers.GenerateErrorMessageBox(ex);
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
             }
         }
 
         private void ExportToCsvButton_Click(object sender, EventArgs e)
         {
-            CsvHelper.ExportDataGridToCsv(ViewEmployeeDataGridView);
+            try
+            {
+                CsvHelper.ExportDataGridToCsv(ViewEmployeeDataGridView);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
+                throw;
+            }
         }
 
         private async void ClearButton_Click_1(object sender, EventArgs e)
@@ -210,11 +216,11 @@ namespace Employees.Forms
                 _employeeFormsProvider.ClearGrid(ViewEmployeeDataGridView);
 
                 NextPageButton.Enabled = false;
-                log.Info("items on tab and grid successfully cleaned.");
+                log.Info(_textFormatter.GenerateCleanedGridMessage());
             }
             catch (Exception ex)
             {
-                MessageHelpers.GenerateErrorMessageBox(ex);
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
             }
         }
 
@@ -242,6 +248,19 @@ namespace Employees.Forms
                 Helpers.GetCheckedRadioButtonOnGroupBox(StatusSearchGroupBox),
                 page.ToString()
                 ).CreateCriteria();
+        }
+
+        private async void MainForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                await _employeeWebService.CheckIfRestApiIsOnline();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessageHelper.GenerateErrorMessageBox(ex);
+                throw;
+            }
         }
     }
 }

@@ -20,5 +20,7 @@
         public const string SlashHttpDelimeter = "/";
         public const string ErrorMessageTitle = "Error Happened";
         public const int CacheKeyExpirationInSeconds = 10;
+        public const string HttpConstantDelete = "DELETE";
+        public const string MultipleNextLines = "\r\n \r\n \r\n";
     }
 }

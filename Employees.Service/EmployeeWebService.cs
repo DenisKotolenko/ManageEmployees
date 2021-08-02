@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace Employees.Service
     /// </summary>
     public class EmployeeWebService : IEmployeeWebService
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IEmployeesRepository _employeesRepository;
 
         /// <summary>
@@ -32,8 +34,16 @@ namespace Employees.Service
         {
             var getByIdUrl = $"{Constants.BaseHostAdress}{Constants.SlashHttpDelimeter}{employeeId}";
 
-            IEmployee foundEmployee = await _employeesRepository.FindEmployeeByIdWebApiAsyncTask(getByIdUrl);
-            return foundEmployee;
+            try
+            {
+                IEmployee foundEmployee = await _employeesRepository.FindEmployeeByIdWebApiAsyncTask(getByIdUrl);
+                return foundEmployee;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                throw ErrorMessageHelper.CreateExceptionWithWebLink(ex, getByIdUrl, WebRequestMethods.Http.Get);
+            }
         }
 
         public async Task<IEmployee> AddEmployeeToWebApiAsync(IEmployee employee)
@@ -46,8 +56,16 @@ namespace Employees.Service
             string json = JsonConvert.SerializeObject(employee);
             var stringContent = new StringContent(json, Encoding.UTF8, Constants.ResponseFormat);
 
-            IEmployee hostDataResult = await _employeesRepository.AddEmployeeToWebApiAsync(stringContent);
-            return hostDataResult;
+            try
+            {
+                IEmployee hostDataResult = await _employeesRepository.AddEmployeeToWebApiAsync(stringContent);
+                return hostDataResult;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                throw ErrorMessageHelper.CreateExceptionWithWebLink(ex, Constants.BaseHostAdress, WebRequestMethods.Http.Post);
+            }
         }
 
         ///<inheritdoc/>
@@ -61,8 +79,16 @@ namespace Employees.Service
             var stringContent = new StringContent(JsonConvert.SerializeObject(employee), Encoding.UTF8, Constants.ResponseFormat);
             var putUrl = $"{Constants.BaseHostAdress}{Constants.SlashHttpDelimeter}{id}";
 
-            IEmployee updatedEmployee = await _employeesRepository.UpdateEmployeeToWebApiAsync(putUrl, stringContent);
-            return updatedEmployee;
+            try
+            {
+                IEmployee updatedEmployee = await _employeesRepository.UpdateEmployeeToWebApiAsync(putUrl, stringContent);
+                return updatedEmployee;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                throw ErrorMessageHelper.CreateExceptionWithWebLink(ex, putUrl, WebRequestMethods.Http.Put);
+            }
         }
 
         ///<inheritdoc/>
@@ -70,7 +96,15 @@ namespace Employees.Service
         {
             var deleteUrl = $"{Constants.BaseHostAdress}{Constants.SlashHttpDelimeter}{id}";
 
-            await _employeesRepository.DeleteEmployeeFromWebApiAsync(deleteUrl);
+            try
+            {
+                await _employeesRepository.DeleteEmployeeFromWebApiAsync(deleteUrl);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                throw ErrorMessageHelper.CreateExceptionWithWebLink(ex, deleteUrl, Constants.HttpConstantDelete);
+            }
         }
 
         ///<inheritdoc/>
@@ -78,8 +112,30 @@ namespace Employees.Service
         {
             var getByCriteriaUrl = $"{Constants.BaseHostAdress}{Constants.QuestionMarkHttpDelimeter}{Helpers.CriteriaUrlStringCreator(criteria)}";
 
-            IHostDataList listOfEmployees = await _employeesRepository.ViewEmployeesByCriteriaWebApiAsync(getByCriteriaUrl);
-            return listOfEmployees;
+            try
+            {
+                IHostDataList listOfEmployees = await _employeesRepository.ViewEmployeesByCriteriaWebApiAsync(getByCriteriaUrl);
+                return listOfEmployees;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                throw ErrorMessageHelper.CreateExceptionWithWebLink(ex, getByCriteriaUrl, WebRequestMethods.Http.Get);
+            }
+        }
+
+        ///<inheritdoc/>
+        public async Task CheckIfRestApiIsOnline()
+        {
+            try
+            {
+                await _employeesRepository.ViewEmployeesByCriteriaWebApiAsync(Constants.BaseHostAdress);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                throw ErrorMessageHelper.CreateExceptionWithWebLink(ex, Constants.BaseHostAdress, WebRequestMethods.Http.Get);
+            }
         }
     }
 }

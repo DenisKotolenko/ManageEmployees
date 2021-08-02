@@ -42,5 +42,11 @@ namespace Employees.Formatters
         /// <param name="employee">Employee.</param>
         /// <returns>Message.</returns>
         string GenerateUpdateMessage(int id, IEmployee employee);
+
+        /// <summary>
+        /// Generates cleaned grid message.
+        /// </summary>
+        /// <returns>Message.</returns>
+        string GenerateCleanedGridMessage();
     }
 }
