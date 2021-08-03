@@ -8,8 +8,6 @@ Please read folowing documents:
 
 **Notes and Improvemnts.docx**
 
-**Software Requirement Specification.docx**
-
 Orginal assignment is under:
 
 **IT Assessment.docx**
