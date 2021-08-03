@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Windows.Forms;
 using Employees.Shared.Constants;
 using Employees.Shared.Models;
@@ -182,7 +181,7 @@ namespace Employees.Shared.Helpers
             {
                 var errorMessage = $"Error received from web api. HttpStatusCode: {httpStatusCode} ErrorMessage: {errorMsg}";
                 log.Error(errorMessage);
-                throw new HttpException(errorMessage);
+                throw new Exception(errorMessage);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Employees.Shared.Models;
 
 namespace TestHelpers
@@ -22,6 +23,22 @@ namespace TestHelpers
                 Gender = "Male",
                 Status = "Active",
             };
+        }
+
+        /// <summary>
+        /// Creates dummy host data.
+        /// </summary>
+        /// <returns>HostData.</returns>
+        public static HostData GetDummyHostData()
+        {
+
+            var hostData = new HostData
+            {
+                Data = (Employee)GetDummyEmployee(),
+                Code = HttpStatusCode.OK,
+            };
+
+            return hostData;
         }
     }
 }

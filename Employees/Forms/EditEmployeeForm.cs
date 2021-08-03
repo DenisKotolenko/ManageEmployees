@@ -22,7 +22,7 @@ namespace Employees.Forms
         private readonly int _currentPage;
         private readonly MainForm _mainForm;
         private readonly ITextFormatter _textFormatter;
-        private readonly IEmployeeWebService _employeeWebService;
+        private readonly IEmployeeService _employeeWebService;
 
         /// <summary>
         /// Main constructor for form.
@@ -30,7 +30,7 @@ namespace Employees.Forms
         /// <param name="employeeForEdit">Selected employee for edit.</param>
         /// <param name="currentPage">Current grid view page.</param>
         /// <param name="mainForm">Main form. Used for triggering grid refresh.</param>
-        public EditEmployeeForm(IEmployee employeeForEdit, int currentPage, MainForm mainForm, IEmployeeWebService employeeWebService)
+        public EditEmployeeForm(IEmployee employeeForEdit, int currentPage, MainForm mainForm, IEmployeeService employeeWebService)
         {
             InitializeComponent();
             _textFormatter = new TextFormatter();

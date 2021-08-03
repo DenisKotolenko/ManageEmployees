@@ -25,8 +25,8 @@ namespace Employees
             try
             {
                 ApiClient.InitializeClient();
-                IEmployeesRepository employeesRepository = new EmployeesRepository();
-                IEmployeeWebService webService = new EmployeeWebService(employeesRepository);
+                IEmployeesRepository employeesRepository = new EmployeesRepository(ApiClient.RestApiClient);
+                IEmployeeService webService = new EmployeeService(employeesRepository);
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);

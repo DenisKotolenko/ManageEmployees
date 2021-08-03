@@ -23,12 +23,12 @@ namespace Employees.Forms
         private readonly IEmployeeFormsProvider _employeeFormsProvider;
         private readonly IPageProvider _pageProvider;
         private readonly ITextFormatter _textFormatter;
-        private readonly IEmployeeWebService _employeeWebService;
+        private readonly IEmployeeService _employeeWebService;
 
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public MainForm(IEmployeeWebService webService)
+        public MainForm(IEmployeeService webService)
         {
             _employeeWebService = webService;
             _employeeFormsProvider = new EmployeeFormsProvider();

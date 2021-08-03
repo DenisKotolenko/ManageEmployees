@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows.Forms;
+using log4net;
 
 namespace Employees.Shared.Helpers
 {
@@ -8,7 +10,7 @@ namespace Employees.Shared.Helpers
     /// </summary>
     public static class ErrorMessageHelper
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         /// <summary>
         /// Shows formatted message box for received exception.

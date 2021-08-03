@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Employees.Repository.Cache;
 using Employees.Repository.Client;
 using Employees.Shared.Constants;
 using Employees.Shared.Helpers;
 using Employees.Shared.Models;
+using log4net;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Employees.Repository.Repo
@@ -15,17 +17,31 @@ namespace Employees.Repository.Repo
     /// </summary>
     public class EmployeesRepository : IEmployeesRepository
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private MemoryCache _cache;
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private IMemoryCache _cache;
         private static MemoryCacheOptions MemoryCacheOptions => new MemoryCacheOptions();
         private readonly object _lock = new object();
+        private readonly IHttpClientProvider _httpClientProvider;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public EmployeesRepository()
+        /// <param name="httpClientProvider">HttpClient provider.</param>
+        public EmployeesRepository(IHttpClientProvider httpClientProvider)
         {
             _cache = new MemoryCache(MemoryCacheOptions);
+            _httpClientProvider = httpClientProvider;
+        }
+
+        /// <summary>
+        /// DI constructor for unit testing.
+        /// </summary>
+        /// <param name="httpClientProvider">Http client provider.</param>
+        /// <param name="cache">Memory cache.</param>
+        public EmployeesRepository(IHttpClientProvider httpClientProvider, IMemoryCache cache)
+        {
+            _cache = cache;
+            _httpClientProvider = httpClientProvider;
         }
 
         ///<inheritdoc/>
@@ -33,9 +49,16 @@ namespace Employees.Repository.Repo
         {
             try
             {
-                IEmployee employeeResult = await AddEmployeePostAsync(stringContent);
-                return employeeResult;
+                using (HttpResponseMessage response = await _httpClientProvider.PostAsync(Constants.BaseHostAdress, stringContent))
+                {
+                    var webApiResult = await response.Content.ReadAsAsync<HostData>();
+                    Helpers.CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
+
+                    log.Info($"Successfully added employee to web api: Method: [{HttpMethod.Post}] request LINK: {Constants.BaseHostAdress} Content: {stringContent}");
+                    return webApiResult.Data;
+                }
             }
+
             catch (Exception ex)
             {
                 log.Error(ex.Message);
@@ -48,9 +71,15 @@ namespace Employees.Repository.Repo
         {
             try
             {
-                IEmployee employeeResult = await UpdateEmployeePutAsync(putUrl, stringContent);
-                DisposeAndRecreateCache();
-                return employeeResult;
+                using (HttpResponseMessage response = await _httpClientProvider.PutAsync(putUrl, stringContent))
+                {
+                    var webApiResult = await response.Content.ReadAsAsync<HostData>();
+                    Helpers.CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
+
+                    log.Info($"Successfully updated employee from web api: Method: [{HttpMethod.Put}] request LINK: {putUrl} with content: {stringContent}");
+                    DisposeAndRecreateCache();
+                    return webApiResult.Data;
+                }
             }
             catch (Exception ex)
             {
@@ -64,8 +93,13 @@ namespace Employees.Repository.Repo
         {
             try
             {
-                await DeleteEmployeeDeleteAsync(deleteUrl);
-                DisposeAndRecreateCache();
+                using (HttpResponseMessage response = await _httpClientProvider.DeleteAsync(deleteUrl))
+                {
+                    var webApiResult = await response.Content.ReadAsAsync<HostData>();
+                    Helpers.CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
+                    DisposeAndRecreateCache();
+                    log.Info($"Successfully deleted employee from web api: Method [{HttpMethod.Delete}] request LINK: {deleteUrl}");
+                }
             }
             catch (Exception ex)
             {
@@ -108,11 +142,16 @@ namespace Employees.Repository.Repo
             }
         }
 
-        private async Task<IEmployee> FindEmployeeByIdGet(string getByIdUrl)
+        /// <summary>
+        /// Finds employee by id.
+        /// </summary>
+        /// <param name="getByIdUrl">Full URL with employee id.</param>
+        /// <returns>Employee.</returns>
+        internal async Task<IEmployee> FindEmployeeByIdGet(string getByIdUrl)
         {
             try
             {
-                using (HttpResponseMessage response = await ApiClient.RestApiClient.GetAsync(getByIdUrl))
+                using (HttpResponseMessage response = await _httpClientProvider.GetAsync(getByIdUrl))
                 {
                     var webApiResult = await response.Content.ReadAsAsync<HostData>();
                     Helpers.CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
@@ -128,11 +167,16 @@ namespace Employees.Repository.Repo
             }
         }
 
-        private async Task<IHostDataList> ViewEmployeesByCriteriaGet(string getByCriteriaUrl)
+        /// <summary>
+        /// Retrieves employees by criteria from web api using GET. Internal for unit testing.
+        /// </summary>
+        /// <param name="getByCriteriaUrl">Full URL with criteria.</param>
+        /// <returns>IHostDataList which contains list of employees.</returns>
+        internal async Task<IHostDataList> ViewEmployeesByCriteriaGet(string getByCriteriaUrl)
         {
             try
             {
-                using (HttpResponseMessage response = await ApiClient.RestApiClient.GetAsync(getByCriteriaUrl))
+                using (HttpResponseMessage response = await _httpClientProvider.GetAsync(getByCriteriaUrl))
                 {
                     var employeeModelList = await response.Content.ReadAsAsync<HostDataList>();
                     Helpers.CheckWebApiResultForErrorsAsync(employeeModelList.Code, "Error");
@@ -148,69 +192,9 @@ namespace Employees.Repository.Repo
                 throw;
             }
         }
-
-        private async Task DeleteEmployeeDeleteAsync(string deleteUrl)
-        {
-            try
-            {
-                using (HttpResponseMessage response = await ApiClient.RestApiClient.DeleteAsync(deleteUrl))
-                {
-                    var webApiResult = await response.Content.ReadAsAsync<HostData>();
-                    Helpers.CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
-
-                    log.Info($"Successfully deleted employee from web api: Method [{HttpMethod.Delete}] request LINK: {deleteUrl}");
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message);
-                throw;
-            }
-        }
-
-        private async Task<IEmployee> UpdateEmployeePutAsync(string putUrl, StringContent stringContent)
-        {
-            try
-            {
-                using (HttpResponseMessage response = await ApiClient.RestApiClient.PutAsync(putUrl, stringContent))
-                {
-                    var webApiResult = await response.Content.ReadAsAsync<HostData>();
-                    Helpers.CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
-
-                    log.Info($"Successfully updated employee from web api: Method: [{HttpMethod.Put}] request LINK: {putUrl} with content: {stringContent}");
-                    return webApiResult.Data;
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message);
-                throw;
-            }
-        }
-
-        private async Task<IEmployee> AddEmployeePostAsync(StringContent stringContent)
-        {
-            try
-            {
-                using (HttpResponseMessage response = await ApiClient.RestApiClient.PostAsync(Constants.BaseHostAdress, stringContent))
-                {
-                    var webApiResult = await response.Content.ReadAsAsync<HostData>();
-                    Helpers.CheckWebApiResultForErrorsAsync(webApiResult.Code, webApiResult.Data?.ErrorMessage);
-
-                    log.Info($"Successfully added employee to web api: Method: [{HttpMethod.Post}] request LINK: {Constants.BaseHostAdress} Content: {stringContent}");
-                    return webApiResult.Data;
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message);
-                throw;
-            }
-        }
-
+        
         /// <summary>
         /// Implemented simple locking mechanism in order to prevent multiple threads from disposing and renewing cache.
-        /// NOTE: This kind of implementation should NEVER EVER be used in bigger application. Cache should be newed only once and then manipulated.
         /// </summary>
         private void DisposeAndRecreateCache()
         {

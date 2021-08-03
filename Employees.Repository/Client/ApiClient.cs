@@ -27,17 +27,18 @@ namespace Employees.Repository.Client
         /// <summary>
         /// HttpClient used for communicating over HTTP to host web api.
         /// </summary>
-        public static HttpClient RestApiClient { get; private set; } = new HttpClient();
+        public static IHttpClientProvider RestApiClient { get; private set; } = new HttpClientProvider(new HttpClient());
 
         /// <summary>
         /// Initialization of HttpClient and setting up base address host web api.
         /// </summary>
         public static void InitializeClient()
         {
-            RestApiClient = new HttpClient();
-            RestApiClient.DefaultRequestHeaders.Accept.Clear();
-            RestApiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Constants.Bearer, Token);
-            RestApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.ResponseFormat));
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Constants.Bearer, Token);
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.ResponseFormat));
+            RestApiClient = new HttpClientProvider(httpClient);
         }
     }
 }

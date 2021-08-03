@@ -17,11 +17,11 @@ namespace Employees.Repository.Cache
         /// <typeparam name="T"></typeparam>
         /// <param name="cache">MemoryCache.</param>
         /// <param name="cacheKey">Key that will be stored in cache.</param>
-        /// <param name="functionResultToCache">Function to evaluate.</param>
+        /// <param name="functionResultToEvaluate">Function to evaluate.</param>
         /// <param name="absoluteExpiration">Expiration of cache key.</param>
         /// <returns></returns>
         public static Task<T> GetOrCreateLazyAsync<T>(this IMemoryCache cache, object cacheKey,
-                                                      Func<Task<T>> functionResultToCache, DateTimeOffset absoluteExpiration)
+                                                      Func<Task<T>> functionResultToEvaluate, DateTimeOffset absoluteExpiration)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace Employees.Repository.Cache
                     {
                         AbsoluteExpiration = absoluteExpiration,
                     });
-                    var lazyFunction = new Lazy<Task<T>>(functionResultToCache);
+                    var lazyFunction = new Lazy<Task<T>>(functionResultToEvaluate);
                     entry.Value = lazyFunction;
                     entry.Dispose(); // Dispose actually inserts the entry in the cache
                     if (!cache.TryGetValue(cacheKey, out lazy)) lazy = lazyFunction;
