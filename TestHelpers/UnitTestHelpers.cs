@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using Employees.Shared.Models;
 
 namespace TestHelpers
